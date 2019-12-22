@@ -1,0 +1,23 @@
+#!/bin/sh -e
+
+# Starts a dev console to compile and run oyun
+
+# Usage
+# ./oyun
+# Then in the sbt console
+# run
+
+export SBT_OPTS=""
+
+if [ ! -f ".sbtopts" ]; then
+   cp .sbtopts.default .sbtopts
+fi
+
+java_env=""
+
+version=$(java -version 2>&1 | awk -F '"' '/version/ {print $2}')
+echo Java "$version"
+
+command="sbt $java_env $@"
+echo $command
+$command

@@ -32,7 +32,7 @@ libraryDependencies ++= Seq(
   scaffeine
 ) ++ silencer.bundle
 
-lazy val modules = Seq(common, user, i18n)
+lazy val modules = Seq(common, user, i18n, security)
 
 lazy val moduleRefs = modules map projectToRef
 lazy val moduleCPDeps = moduleRefs map { new sbt.ClasspathDependency(_, None) }
@@ -69,4 +69,10 @@ lazy val common = module("common",
 lazy val user = module("user",
   Seq(common),
   Seq(hasher) ++ reactivemongo.bundle
+)
+
+
+lazy val security = module("security",
+  Seq(common, i18n),
+  Seq(scalatags, hasher) ++ reactivemongo.bundle
 )

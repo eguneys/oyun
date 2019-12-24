@@ -6,6 +6,16 @@ import ornicar.scalalib.{ ValidTypes, Zero }
 
 trait OyunTypes extends ValidTypes {
 
+  trait IntValue extends Any {
+    def value: Int
+    override def toString = value.toString
+  }
+
+  trait BooleanValue extends Any {
+    def value: Boolean
+    override def toString = value.toString
+  }
+
   type Fu[A] = Future[A]
   type Funit = Fu[Unit]
 
@@ -17,10 +27,22 @@ trait OyunTypes extends ValidTypes {
   val fuFalse = fuccess(false)
 
 
+  implicit val fUnitZero: Zero[Fu[Unit]] = Zero.instance(funit)
+  implicit val fBooleanZero: Zero[Fu[Boolean]] = Zero.instance(fuFalse)
+
+  implicit def fuZero[A](implicit az: Zero[A]) = new Zero[Fu[A]] {
+    def zero = fuccess(az.zero)
+  }
+
 
 }
 
 object OyunTypes extends OyunTypes {
+
+  trait StringValue extends Any {
+    def value: String
+    override def toString = value
+  }
 
 
 }

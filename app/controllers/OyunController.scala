@@ -53,6 +53,6 @@ abstract private[controllers] class OyunController(val env: Env)
 
   type RestoredUser = (Option[UserModel])
   private def restoreUser(req: RequestHeader): Fu[RestoredUser] =
-    ???
+    env.security.api restoreUser req
 
 }

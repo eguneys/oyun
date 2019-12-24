@@ -5,10 +5,10 @@ import play.api.ConfigLoader
 
 object config {
 
-  case class BaseUrl(value: String) extends AnyVal
+  case class BaseUrl(value: String) extends AnyVal with StringValue
 
-  case class NetDomain(value: String) extends AnyVal
-  case class AssetDomain(value: String) extends AnyVal
+  case class NetDomain(value: String) extends AnyVal with StringValue
+  case class AssetDomain(value: String) extends AnyVal with StringValue
 
   case class NetConfig(
     domain: NetDomain,

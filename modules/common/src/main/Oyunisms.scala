@@ -8,11 +8,14 @@ trait Oyunisms
     with scalalib.Common
     with scalalib.OrnicarOption
     with scalalib.Zeros
+    with scalalib.Zero.Syntax
     with scalaz.std.OptionFunctions
     with scalaz.std.OptionInstances
     with scalaz.syntax.std.ToOptionIdOps
     with scalaz.syntax.ToIdOps 
     with scalaz.syntax.ToMonoidOps {
+
+  type StringValue = oyun.base.OyunTypes.StringValue
 
 
   @inline implicit def toPimpedFuture[A](f: Fu[A]) = new PimpedFuture(f)

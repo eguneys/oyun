@@ -4,7 +4,7 @@ case class ApiVersion(value: Int) extends AnyVal {
   def v1 = value == 1
 }
 
-case class AssetVersion(value: String) extends AnyVal
+case class AssetVersion(value: String) extends AnyVal with StringValue
 
 object AssetVersion {
 

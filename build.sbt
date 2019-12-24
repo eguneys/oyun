@@ -9,7 +9,7 @@ lazy val root = Project("oyun", file("."))
 
 scalaVersion := globalScalaVersion
 resolvers ++= Dependencies.Resolvers.commons
-scalacOptions ++= compilerOptions //  :+ "-P:silencer:pathFilters=target/scala-2.13/routes"
+scalacOptions ++= compilerOptions :+ "-P:silencer:pathFilters=target/scala-2.13/routes"
 sources in (Compile, doc) := Seq.empty
 publishArtifact in (Compile, packageDoc) := false
 publishArtifact in (Compile, packageSrc) := false
@@ -30,9 +30,9 @@ libraryDependencies ++= Seq(
   reactivemongo.driver, reactivemongo.bson,
   scalatags,
   scaffeine
-)
+) ++ silencer.bundle
 
-lazy val modules = Seq(common, user)
+lazy val modules = Seq(common, user, i18n)
 
 lazy val moduleRefs = modules map projectToRef
 lazy val moduleCPDeps = moduleRefs map { new sbt.ClasspathDependency(_, None) }
@@ -45,6 +45,21 @@ lazy val api = module("api",
   aggregate in Test := true
 ) aggregate (moduleRefs: _*)
 
+
+lazy val i18n = module("i18n",
+  Seq(common, user),
+  Seq(scalatags)
+).settings(
+  sourceGenerators in Compile += Def.task {
+    MessageCompiler(
+      sourceDir = new File("translation/source"),
+      destDir = new File("translation/dest"),
+      dbs = List("site"),
+      compileTo = (sourceManaged in Compile).value / "messages"
+    )
+  }.taskValue,
+  scalacOptions += "-P:silencer:pathFilters=modules/i18n/target"
+)
 
 lazy val common = module("common",
   Seq(),

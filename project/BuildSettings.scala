@@ -23,7 +23,10 @@ object BuildSettings {
     scalaz,
     scalalib,
     jodaTime,
-    ws
+    ws,
+    macwire.macros,
+    macwire.util,
+    autoconfig
   )
 
   def module(name: String,
@@ -35,7 +38,7 @@ object BuildSettings {
       file("modules/" + name)
     ).dependsOn(deps: _*)
       .settings(
-        libraryDependencies ++= defaultLibs ++ libs,
+        libraryDependencies ++= defaultLibs ++ libs ++ silencer.bundle,
         buildSettings,
         srcMain)
 

@@ -1,6 +1,7 @@
 package controllers
 
 import play.api.mvc._
+import scalatags.Text.Frag
 
 import oyun.api.{ Context, HeaderContext, PageData }
 import oyun.app._
@@ -10,8 +11,11 @@ import oyun.user.{ UserContext, User => UserModel }
 abstract private[controllers] class OyunController(val env: Env)
     extends BaseController {
 
+  def controllerComponents = env.controllerComponents
   implicit def executionContext = env.executionContext
   implicit def ctxReq(implicit ctx: Context) = ctx.req
+
+  implicit protected def OyunFragToResult(frag: Frag): Result = Ok(frag)
 
   protected val keyPages = new KeyPages(env)
 
@@ -34,7 +38,7 @@ abstract private[controllers] class OyunController(val env: Env)
 
   protected def reqToCtx(req: RequestHeader): Fu[HeaderContext] = restoreUser(req) flatMap {
     case (d) =>
-      val ctx = UserContext(req, d)//d.map(_.user))
+      val ctx = UserContext(req, d, oyun.i18n.I18nLangPicker(req, d))//d.map(_.user))
       pageDataBuilder(ctx) dmap { Context(ctx, _) }
   }
 

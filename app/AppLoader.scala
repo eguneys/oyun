@@ -26,13 +26,14 @@ final class OyunComponents(ctx: ApplicationLoader.Context)
   implicit def system = actorSystem
   implicit def ws = wsClient
 
+  implicit def mimeTypes = fileMimeTypes
+  lazy val devAssetsController = wire[ExternalAssets]
 
   lazy val boot: oyun.app.EnvBoot = wire[oyun.app.EnvBoot]
   lazy val env: oyun.app.Env = boot.env
 
-
   lazy val lobby: Lobby = wire[Lobby]
-
+  lazy val main: Main = wire[Main]
 
   val router: Router = {
     val prefix: String = "/"

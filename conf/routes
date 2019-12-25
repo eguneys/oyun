@@ -1,3 +1,7 @@
 # Lobby
 
 GET     /       controllers.Lobby.home
+
+
+GET     /assets/_$v<\w{6}>/*file        controllers.Main.devAsset(v, path="public", file)
+GET     /assets/*file                   controllers.ExternalAssets.at(path="public", file)

@@ -33,7 +33,7 @@ object layout {
   }
 
   private val favicons = raw {
-    List(512, 256, 128, 64) map { px =>
+    List(16) map { px =>
       s"""<link rel="icon" type="image/png" href="${staticUrl(s"logo/oyunkeyf-favicon-$px.png")}" sizes="${px}x${px}">"""
     } mkString("", "", s"""<link id="favicon" rel="icon" type="image/png" href="${staticUrl("logo/oyunkeyf-favicon-32.png")}" sizes="32x32">""")
   }

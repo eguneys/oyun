@@ -1,0 +1,20 @@
+{
+  "name": "ui",
+  "version": "1.0.0",
+  "main": "index.js",
+  "license": "MIT",
+  "devDependencies": {
+    "gulp": "^4.0.2",
+    "gulp-autoprefixer": "^7.0.1",
+    "gulp-cached": "^1.1.1",
+    "gulp-filter": "^6.0.0",
+    "gulp-if": "^3.0.0",
+    "gulp-rename": "^2.0.0",
+    "gulp-sass": "^4.0.2",
+    "gulp-sass-inheritance": "^1.1.2",
+    "gulp-sourcemaps": "^2.6.5"
+  },
+  "dependencies": {
+    "breakpoint-sass": "^2.7.1"
+  }
+}

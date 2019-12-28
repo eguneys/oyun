@@ -32,6 +32,7 @@ final class OyunComponents(ctx: ApplicationLoader.Context)
   lazy val boot: oyun.app.EnvBoot = wire[oyun.app.EnvBoot]
   lazy val env: oyun.app.Env = boot.env
 
+  lazy val auth: Auth = wire[Auth]
   lazy val lobby: Lobby = wire[Lobby]
   lazy val main: Main = wire[Main]
 

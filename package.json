@@ -1,0 +1,14 @@
+{
+  "name": "oyun",
+  "version": "1.0.0",
+  "scripts": {
+    "transDump": "node bin/trans-dump"
+  },
+  "repository": "git@github.com:eguneys/oyun.git",
+  "author": "Emre Guneyler <eguneys@hotmail.com>",
+  "license": "MIT",
+  "dependencies": {
+    "fs-extra": "^8.1.0",
+    "xml2js": "^0.4.23"
+  }
+}

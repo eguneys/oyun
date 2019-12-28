@@ -13,7 +13,7 @@ object home {
     views.html.base.layout(
       title = "",
       fullTitle = Some {
-        s"oyunkeyf.net * trans.freeOnlinePoker"
+        s"oyunkeyf.net • ${trans.freeOnlinePoker.txt()}"
       },
       moreJs = frag(
         jsAt(s"compiled/oyunkeyf.lobby${isProd ?? (".min")}.js", defer = true),

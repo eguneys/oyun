@@ -1,4 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <resources>
+  <string name="freeOnlinePoker">Free Online Poker</string>
   <string name="playWithAFriend">Play with a friend</string>
+  <string name="signIn">Sign in</string>
+  <string name="reconnecting">Reconnecting</string>
 </resources>

@@ -38,6 +38,21 @@ object layout {
     } mkString("", "", s"""<link id="favicon" rel="icon" type="image/png" href="${staticUrl("logo/oyunkeyf-favicon-32.png")}" sizes="32x32">""")
   }
 
+
+  private def dasher(me: oyun.user.User) =
+    raw(
+      s"""<div class="dasher"><a id="user_tag" class="toggle link">${me.username}</a><div id="dasher_app" class="dropdown"></div></div>"""
+    )
+
+  private def anonDasher(playing: Boolean)(implicit ctx: Context) = 
+    spaceless(s"""<div class="dasher">
+<a class="toggle link anon">
+  <span data-icon="%"></span>
+</a>
+<div id="dasher_app" class="dropdown" data-playing="$playing"></div>
+</div>
+<a href="${routes.Auth.login}?referrer=${ctx.req.path}" class="signin button button-empty">${trans.signIn().render}</a>""")
+
   private val spaceRegex = """\s{2,}+""".r
   private def spaceless(html: String) = raw(spaceRegex.replaceAllIn(html.replace("\\n", ""), ""))
 
@@ -77,7 +92,7 @@ object layout {
             "is2d" -> true
           )
         )(body),
-        a(id := "reconnecting", cls := "link text", dataIcon := "B")("trans.reconnecting"),
+        a(id := "reconnecting", cls := "link text", dataIcon := "B")(trans.reconnecting()),
         if (isProd)
           jsAt(s"compiled/oyunkeyf.site.min.js", defer = deferJs)
         else
@@ -95,6 +110,7 @@ object layout {
     private val topnavToggle = spaceless(
       """
 <input type="checkbox" id="tn-tg" class="topnav-toggle fullscreen-toggle">
+<label for="tn-tg" class="hbg"><span class="hbg__in"></span></label>
 """
     )
 
@@ -111,6 +127,9 @@ object layout {
           topnav()
         ),
         div(cls := "site-buttons")(
+          ctx.me map { me =>
+            frag(dasher(me))
+          } getOrElse { anonDasher(playing) }
         )
       )
 

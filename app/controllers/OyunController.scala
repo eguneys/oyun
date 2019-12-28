@@ -9,15 +9,22 @@ import oyun.common.{ ApiVersion }
 import oyun.user.{ UserContext, User => UserModel }
 
 abstract private[controllers] class OyunController(val env: Env)
-    extends BaseController {
+    extends BaseController
+    with RequestGetter {
 
   def controllerComponents = env.controllerComponents
   implicit def executionContext = env.executionContext
-  implicit def ctxReq(implicit ctx: Context) = ctx.req
+
+  implicit final protected class OyunPimpedResult(result: Result) {
+    def fuccess = scala.concurrent.Future successful result
+  }
 
   implicit protected def OyunFragToResult(frag: Frag): Result = Ok(frag)
 
   protected val keyPages = new KeyPages(env)
+
+  implicit def ctxLang(implicit ctx: Context) = ctx.lang
+  implicit def ctxReq(implicit ctx: Context) = ctx.req
 
 
   protected def Open(f: Context => Fu[Result]): Action[Unit] =

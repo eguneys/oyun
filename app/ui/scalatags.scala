@@ -49,6 +49,7 @@ trait ScalatagsTemplate
     with ScalatagsSnippets
     with ScalatagsPrefix {
 
+  val trans = oyun.i18n.I18nKeys
   def main = scalatags.Text.tags2.main
 
 

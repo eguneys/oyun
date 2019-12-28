@@ -11,6 +11,18 @@ sealed trait UserContext {
 
   def lang: Lang
 
+  def isAuth = me.isDefined
+
+  def isAnon = !isAuth
+
+  def is(user: User): Boolean = me contains user
+
+  def userId = me.map(_.id)
+
+  def username = me.map(_.username)
+
+  def usernameOrAnon = username | "Anonymous"
+
 }
 
 sealed abstract class BaseUserContext(

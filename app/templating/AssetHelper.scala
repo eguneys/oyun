@@ -23,10 +23,10 @@ trait AssetHelper { self: I18nHelper =>
   def staticUrl(path: String) = s"$assetBaseUrl/assets/$path"
 
   def cssTag(name: String)(implicit ctx: Context): Frag =
-    cssTagWithTheme(name, "")
+    cssTagWithTheme(name, "dark")
 
   def cssTagWithTheme(name: String, theme: String): Frag =
-    cssAt(s"css/$name.${if (isProd) "min" else "dev"}.css")
+    cssAt(s"css/$name.$theme.${if (isProd) "min" else "dev"}.css")
 
   private def cssAt(path: String): Frag =
     link(href := assetUrl(path), tpe := "text/css", rel := "stylesheet")

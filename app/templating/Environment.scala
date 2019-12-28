@@ -5,7 +5,9 @@ package templating
 object Environment
     extends oyun.Oyunisms
     with AssetHelper 
-    with I18nHelper {
+    with I18nHelper
+    with FormHelper 
+    with StringHelper {
 
 
   private var envVar: Option[Env] = None

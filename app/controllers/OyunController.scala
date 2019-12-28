@@ -3,7 +3,7 @@ package controllers
 import play.api.mvc._
 import scalatags.Text.Frag
 
-import oyun.api.{ Context, HeaderContext, PageData }
+import oyun.api.{ BodyContext, Context, HeaderContext, PageData }
 import oyun.app._
 import oyun.common.{ ApiVersion }
 import oyun.user.{ UserContext, User => UserModel }
@@ -34,6 +34,14 @@ abstract private[controllers] class OyunController(val env: Env)
     Action.async(parser)(handleOpen(f, _))
 
 
+  protected def OpenBody(f: BodyContext[_] => Fu[Result]): Action[AnyContent] =
+    OpenBody(parse.anyContent)(f)
+
+  protected def OpenBody[A](parser: BodyParser[A])(f: BodyContext[A] => Fu[Result]): Action[A] =
+    Action.async(parser) { req =>
+      reqToCtx(req) flatMap f
+    }
+
   private def handleOpen(f: Context => Fu[Result], req: RequestHeader): Fu[Result] =
     reqToCtx(req) flatMap f
 
@@ -48,6 +56,13 @@ abstract private[controllers] class OyunController(val env: Env)
       val ctx = UserContext(req, d, oyun.i18n.I18nLangPicker(req, d))//d.map(_.user))
       pageDataBuilder(ctx) dmap { Context(ctx, _) }
   }
+
+  protected def reqToCtx[A](req: Request[A]): Fu[BodyContext[A]] =
+    restoreUser(req) flatMap {
+      case d =>
+        val ctx = UserContext(req, d, oyun.i18n.I18nLangPicker(req, d))
+        pageDataBuilder(ctx) dmap { Context(ctx, _) }
+    }
 
 
   private def pageDataBuilder(ctx: UserContext): Fu[PageData] = {

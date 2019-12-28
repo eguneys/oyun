@@ -2,7 +2,7 @@ package oyun.api
 
 import play.api.mvc.RequestHeader
 
-import oyun.user.{ HeaderUserContext, UserContext }
+import oyun.user.{ BodyUserContext, HeaderUserContext, UserContext }
 
 case class PageData()
 
@@ -29,6 +29,15 @@ sealed abstract class BaseContext(
 ) extends Context
 
 
+final class BodyContext[A](
+  val bodyContext: BodyUserContext[A],
+  data: PageData
+) extends BaseContext(bodyContext, data) {
+
+  def body = bodyContext.body
+
+}
+
 final class HeaderContext(
   headerContext: HeaderUserContext,
   data: PageData
@@ -38,5 +47,8 @@ object Context {
 
   def apply(userContext: HeaderUserContext, pageData: PageData): HeaderContext =
     new HeaderContext(userContext, pageData)
+
+  def apply[A](userContext: BodyUserContext[A], pageData: PageData): BodyContext[A] =
+    new BodyContext(userContext, pageData)
   
 }

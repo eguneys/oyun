@@ -31,6 +31,10 @@ trait AssetHelper { self: I18nHelper =>
   private def cssAt(path: String): Frag =
     link(href := assetUrl(path), tpe := "text/css", rel := "stylesheet")
 
+
+  def jsTag(name: String, defer: Boolean = false): Frag =
+    jsAt("javascripts/" + name, defer = defer)
+
   def jsAt(path: String, defer: Boolean = false): Frag = script(
     defer option deferAttr,
     src := assetUrl(path))

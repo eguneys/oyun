@@ -6,7 +6,7 @@ import scalatags.text.Builder
 import scalatags.Text.{ Aggregate, Cap }
 
 trait ScalatagsAttrs {
-
+  val minlength = attr("minlength")
   val dataAssetUrl = attr("data-asset-url")
   val dataAssetVersion = attr("data-asset-version")
   val dataDev = attr("data-dev")

@@ -5,6 +5,9 @@ GET     /       controllers.Lobby.home
 # Authentication
 
 GET     /login  controllers.Auth.login
+POST    /login  controllers.Auth.authenticate
+GET     /signup controllers.Auth.signup
+POST     /signup controllers.Auth.signupPost
 
 GET     /assets/_$v<\w{6}>/*file        controllers.Main.devAsset(v, path="public", file)
 GET     /assets/*file                   controllers.ExternalAssets.at(path="public", file)

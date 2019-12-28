@@ -32,6 +32,8 @@ sealed abstract class BaseUserContext(
 
 }
 
+final class BodyUserContext[A](val body: Request[A], m: Option[User], l: Lang) extends BaseUserContext(body, m, l)
+
 final class HeaderUserContext(r: RequestHeader, m: Option[User], l: Lang) extends BaseUserContext(r, m, l)
 
 trait UserContextWrapper extends UserContext {
@@ -48,5 +50,11 @@ object UserContext {
     req: RequestHeader,
     me: Option[User],
     lang: Lang): HeaderUserContext = new HeaderUserContext(req, me, lang)
+
+  def apply[A](
+    req: Request[A],
+    me: Option[User],
+    lang: Lang): BodyUserContext[A] =
+    new BodyUserContext(req, me, lang)
 
 }

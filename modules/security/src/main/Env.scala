@@ -16,6 +16,14 @@ final class Env(
 )(implicit ec: scala.concurrent.ExecutionContext, system: ActorSystem) {
 
 
+  private val config = appConfig.get[SecurityConfig]("security")(SecurityConfig.loader)
+
+  val recaptchaPublicConfig = config.recaptcha.public
+
+
+  lazy val forms = wire[DataForm]
+
+
   lazy val store = new Store()
 
   lazy val api = wire[SecurityApi]

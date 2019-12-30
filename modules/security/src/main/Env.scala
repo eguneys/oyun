@@ -6,13 +6,14 @@ import play.api.Configuration
 import play.api.libs.ws.WSClient
 
 import oyun.common.config._
-import oyun.user.{ UserRepo }
+import oyun.user.{ Authenticator, UserRepo }
 
 final class Env(
   appConfig: Configuration,
   ws: WSClient,
   net: NetConfig,
-  userRepo: UserRepo
+  userRepo: UserRepo,
+  authenticator: Authenticator,
 )(implicit ec: scala.concurrent.ExecutionContext, system: ActorSystem) {
 
 
@@ -27,6 +28,8 @@ final class Env(
   lazy val store = new Store()
 
   lazy val api = wire[SecurityApi]
+
+  lazy val emailAddressValidator = wire[EmailAddressValidator]
   
 }
 

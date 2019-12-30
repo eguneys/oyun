@@ -8,12 +8,24 @@ import play.api.libs.ws.WSClient
 
 import oyun.common.config._
 
+private class UserConfig(
+  @ConfigName("collection.user") val collectionUser: CollName,
+  @ConfigName("password.bpass.secret") val passwordBPassSecret: Secret
+)
+
 @Module
 final class Env(
-  appConfig: Configuration
+  appConfig: Configuration,
+  db: oyun.db.Db
 )(implicit ec: scala.concurrent.ExecutionContext, system: ActorSystem, ws: WSClient) {
 
+  private val config = appConfig.get[UserConfig]("user")(AutoConfig.loader)
 
-  val repo = new UserRepo()
+
+  val repo = new UserRepo(db(config.collectionUser))
+
+  private lazy val passHasher = new PasswordHasher()
+
+  lazy val authenticator = wire[Authenticator]
   
 }

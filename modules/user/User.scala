@@ -3,6 +3,7 @@ package oyun.user
 case class User(
   id: String,
   username: String,
+  enabled: Boolean,
   lang: Option[String]
 ) {
 
@@ -47,8 +48,34 @@ object User {
 
     val id = "_id"
     val username = "username"
+    val enabled = "enabled"
+    val lang = "lang"
     val email = "email"
+    val bpass = "bpass"
+  }
 
+  import oyun.db.BSON
+  import oyun.db.dsl._
+
+
+  implicit val userBSONHandler = new BSON[User] {
+    import BSONFields._
+    import reactivemongo.api.bson.BSONDocument
+
+
+    def reads(r: BSON.Reader): User = User(
+      id = r str id,
+      username = r str username,
+      enabled = r bool enabled,
+      lang = r strO lang
+    )
+
+    def writes(w: BSON.Writer, o: User) = BSONDocument(
+      id -> o.id,
+      username -> o.username,
+      enabled -> o.enabled,
+      lang -> o.lang
+    )
   }
 
 }

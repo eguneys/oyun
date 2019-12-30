@@ -5,6 +5,8 @@ import play.api.ConfigLoader
 
 object config {
 
+  case class CollName(value: String) extends AnyVal with StringValue
+
   case class Secret(value: String) extends AnyVal {
 
     override def toString = "Secret(****)"
@@ -25,6 +27,7 @@ object config {
     crawlable: Boolean
   )
 
+  implicit val collNameLoader = strLoader(CollName.apply)
   implicit val secretLoader = strLoader(Secret.apply)
   implicit val baseUrlLoader = strLoader(BaseUrl.apply)
   implicit val netDomainLoader = strLoader(NetDomain.apply)

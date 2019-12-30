@@ -37,7 +37,7 @@ final class SecurityApi(
         "username" -> nonEmptyText,
         "password" -> nonEmptyText
       )(authenticateCandidate(candidate)) {
-        case LoginCandidate.Success(user) => (user.username, "", none).some
+        case LoginCandidate.Success(user) => (user.username, "").some
         case _ => none
       }.verifying(Constraint { (t: LoginCandidate.Result) =>
         t match {
@@ -59,6 +59,13 @@ final class SecurityApi(
     }
   } map loadedLoginForm _
    
+
+  private def authenticateCandidate(candidate: Option[LoginCandidate])(
+    _username: String,
+    password: String
+  ): LoginCandidate.Result = candidate.fold[LoginCandidate.Result](LoginCandidate.InvalidUsernameOrPassword) {
+    _(User.ClearPassword(password))
+  }
 
 
   def restoreUser(req: RequestHeader): Fu[Option[User]] =

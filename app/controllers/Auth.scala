@@ -4,9 +4,10 @@ import play.api.mvc._
 
 import oyun.api.Context
 import oyun.app._
-import oyun.common.{ HTTPRequest }
-import oyun.user.{ User => UserModel }
-
+import oyun.common.{ EmailAddress, HTTPRequest }
+import oyun.security.{ EmailAddressValidator }
+import oyun.user.{ User => UserModel, PasswordHasher }
+import UserModel.ClearPassword
 import views._
 
 final class Auth(
@@ -27,6 +28,13 @@ final class Auth(
       case None => Ok(html.auth.login(api.loginForm, referrer)).fuccess
     }
   }
+
+  private def authenticateCookie(sessionId: String)(result: Result)(implicit req: RequestHeader) =
+    result.withCookies(
+      env.oyunCookie.withSession {
+        _ + (api.sessionIdKey -> sessionId)
+      }
+    )
 
   def authenticate = OpenBody { implicit ctx =>
     def redirectTo(url: String) = if (HTTPRequest isXhr ctx.req) Ok(s"ok:$url") else Redirect(url)
@@ -66,10 +74,54 @@ final class Auth(
     implicit val req = ctx.body
 
     negotiate(
-      html = ???,
+      html = forms.signup.website.bindFromRequest.fold(
+        err => {
+          BadRequest(html.auth.signup(err, env.security.recaptchaPublicConfig)).fuccess
+        },
+        data =>
+        env.security.recaptcha.verify(~data.recaptchaResponse, req).flatMap {
+          case false =>
+            BadRequest(
+              html.auth.signup(forms.signup.website fill data, env.security.recaptchaPublicConfig)
+            ).fuccess
+          case true =>
+            {
+              val email = env.security.emailAddressValidator
+                .validate(data.realEmail) err s"Invalid email ${data.email}"
+              val passwordHash = env.user.authenticator passEnc ClearPassword(data.password)
+              env.user.repo
+                .create(
+                  data.username,
+                  passwordHash,
+                  email.acceptable
+                )
+                .orFail(s"No user could be created for ${data.username}")
+                .map(_ -> email)
+                .flatMap {
+                  case (user, EmailAddressValidator.Acceptable(email)) =>
+                    welcome(user, email) >> redirectNewUser(user)
+                }
+            }
+        }
+
+      ),
       api = apiVersion =>
       ???
     )
+  }
+
+
+  private def welcome(user: UserModel, email: EmailAddress)(implicit ctx: Context): Funit = {
+    funit
+  }
+
+  private def redirectNewUser(user: UserModel)(implicit ctx: Context) = {
+    api.saveAuthentication(user.id) flatMap { sessionId =>
+      negotiate(
+        html = Redirect(routes.User.show(user.username)).fuccess,
+        api = _ => ???
+      ) map authenticateCookie(sessionId)
+    }
   }
  
 }

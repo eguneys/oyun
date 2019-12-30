@@ -1,5 +1,7 @@
 package oyun.security
 
+import ornicar.scalalib.Random
+
 import play.api.data._
 import play.api.data.Forms._
 import play.api.data.validation.{ Constraint, Valid => FormValid, Invalid, ValidationError }
@@ -65,6 +67,13 @@ final class SecurityApi(
     password: String
   ): LoginCandidate.Result = candidate.fold[LoginCandidate.Result](LoginCandidate.InvalidUsernameOrPassword) {
     _(User.ClearPassword(password))
+  }
+
+
+  def saveAuthentication(userId: User.ID)(
+    implicit req: RequestHeader): Fu[String] = {
+    val sessionId = Random secureString 22
+    store.save(sessionId, userId, req, up = true) inject sessionId
   }
 
 

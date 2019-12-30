@@ -14,18 +14,24 @@ final class Env(
   net: NetConfig,
   userRepo: UserRepo,
   authenticator: Authenticator,
+  db: oyun.db.Db
 )(implicit ec: scala.concurrent.ExecutionContext, system: ActorSystem) {
 
 
   private val config = appConfig.get[SecurityConfig]("security")(SecurityConfig.loader)
+  import net.{ baseUrl, domain }
 
   val recaptchaPublicConfig = config.recaptcha.public
+
+  lazy val recaptcha: Recaptcha =
+    if (config.recaptcha.enabled) wire[RecaptchaGoogle]
+    else RecaptchaSkip
 
 
   lazy val forms = wire[DataForm]
 
 
-  lazy val store = new Store()
+  lazy val store = new Store(db(config.collection.security))
 
   lazy val api = wire[SecurityApi]
 

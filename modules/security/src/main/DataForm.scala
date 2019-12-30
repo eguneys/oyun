@@ -4,6 +4,8 @@ import play.api.data._
 import play.api.data.Forms._
 import play.api.data.validation.Constraints
 
+import oyun.common.{ EmailAddress }
+
 final class DataForm(
 )(implicit ec: scala.concurrent.ExecutionContext) {
 
@@ -44,6 +46,8 @@ object DataForm {
     `g-recaptcha-response`: Option[String]) {
 
     def recaptchaResponse = `g-recaptcha-response`
+
+    def realEmail = EmailAddress(email)
 
   }
   

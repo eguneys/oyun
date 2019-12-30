@@ -19,6 +19,11 @@ val `email` = new Translated("email", Site)
 val `usernameOrEmail` = new Translated("usernameOrEmail", Site)
 val `password` = new Translated("password", Site)
 val `usernameAlreadyUsed` = new Translated("usernameAlreadyUsed", Site)
+val `invalidUsernameOrPassword` = new Translated("invalidUsernameOrPassword", Site)
+val `error.minLength` = new Translated("error.minLength", Site)
+val `error.maxLength` = new Translated("error.maxLength", Site)
+val `error.min` = new Translated("error.min", Site)
+val `error.max` = new Translated("error.max", Site)
 val `reconnecting` = new Translated("reconnecting", Site)
 
 }

@@ -87,19 +87,19 @@ trait Handlers {
       _.map { case (k, v) => keyIso.to(k)   -> v }
     )
 
-  // implicit def bsonArrayToNonEmptyListHandler[T](implicit handler: BSONHandler[T]) = {
-  //   def listWriter = collectionWriter[T, List[T]]
-  //   def listReader = collectionReader[List, T]
-  //   tryHandler[NonEmptyList[T]](
-  //     {
-  //       case array: BSONArray =>
-  //         listReader.readTry(array).flatMap {
-  //           _.toNel toTry s"BSONArray is empty, can't build NonEmptyList"
-  //         }
-  //     },
-  //     nel => listWriter.writeTry(nel.toList).get
-  //   )
-  // }
+  implicit def bsonArrayToNonEmptyListHandler[T](implicit handler: BSONHandler[T]) = {
+    def listWriter = collectionWriter[T, List[T]]
+    def listReader = collectionReader[List, T]
+    tryHandler[NonEmptyList[T]](
+      {
+        case array: BSONArray =>
+          listReader.readTry(array).flatMap {
+            _.toNel toTry s"BSONArray is empty, can't build NonEmptyList"
+          }
+      },
+      nel => listWriter.writeTry(nel.list.toList).get
+    )
+  }
 
   // implicit val ipAddressHandler = isoHandler[IpAddress, String](ipAddressIso)
 

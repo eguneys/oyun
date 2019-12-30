@@ -49,6 +49,8 @@ object User {
     val id = "_id"
     val username = "username"
     val enabled = "enabled"
+    val createdAt = "createdAt"
+    val seenAt = "seenAt"
     val lang = "lang"
     val email = "email"
     val bpass = "bpass"

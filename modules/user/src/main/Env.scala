@@ -24,7 +24,10 @@ final class Env(
 
   val repo = new UserRepo(db(config.collectionUser))
 
-  private lazy val passHasher = new PasswordHasher()
+  private lazy val passHasher = new PasswordHasher(
+    secret = config.passwordBPassSecret,
+    logRounds = 10
+  )
 
   lazy val authenticator = wire[Authenticator]
   

@@ -21,6 +21,9 @@ final class OyunComponents(ctx: ApplicationLoader.Context)
 
   import _root_.controllers._
 
+  def cookieBaker = new LegacySessionCookieBaker(httpConfiguration.session, cookieSigner)
+
+
   lazy val httpFilters = Seq()
 
   implicit def system = actorSystem
@@ -34,6 +37,7 @@ final class OyunComponents(ctx: ApplicationLoader.Context)
 
   lazy val auth: Auth = wire[Auth]
   lazy val lobby: Lobby = wire[Lobby]
+  lazy val user: User = wire[User]
   lazy val main: Main = wire[Main]
 
   val router: Router = {

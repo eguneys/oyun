@@ -6,7 +6,8 @@ object Environment
     extends oyun.Oyunisms
     with AssetHelper 
     with I18nHelper
-    with FormHelper 
+    with UserHelper
+    with FormHelper
     with StringHelper {
 
 

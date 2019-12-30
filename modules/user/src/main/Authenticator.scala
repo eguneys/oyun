@@ -14,6 +14,8 @@ final class Authenticator(
 
   import Authenticator._
 
+  def passEnc(p: ClearPassword): HashedPassword = passHasher.hash(p)
+
   def compare(auth: AuthData, p: ClearPassword): Boolean = {
     val newP = p
     passHasher.check(auth.bpass, newP)

@@ -1,6 +1,9 @@
 # Lobby
 GET     /       controllers.Lobby.home
 
+# User
+
+GET     /@/:username    controllers.User.show(username: String)
 
 # Authentication
 

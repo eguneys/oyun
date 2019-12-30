@@ -6,11 +6,15 @@ import oyun.base._
 trait Oyunisms
     extends OyunTypes
     with scalalib.Common
+    with scalalib.OrnicarNonEmptyList
     with scalalib.OrnicarOption
     with scalalib.Zeros
     with scalalib.Zero.Syntax
+    with scalaz.std.ListFunctions
+    with scalaz.std.ListInstances
     with scalaz.std.OptionFunctions
     with scalaz.std.OptionInstances
+    with scalaz.syntax.std.ToListOps
     with scalaz.syntax.std.ToOptionIdOps
     with scalaz.syntax.ToIdOps 
     with scalaz.syntax.ToMonoidOps {
@@ -19,6 +23,8 @@ trait Oyunisms
 
 
   @inline implicit def toPimpedFuture[A](f: Fu[A]) = new PimpedFuture(f)
+  @inline implicit def toPimpedFutureBoolean(f: Fu[Boolean]) = new PimpedFutureBoolean(f)
+  @inline implicit def toPimpedFutureOption[A](f: Fu[Option[A]]) = new PimpedFutureOption(f)
 
   @inline implicit def toPimpedBoolean(b: Boolean) = new PimpedBoolean(b)
 

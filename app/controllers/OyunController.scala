@@ -1,5 +1,6 @@
 package controllers
 
+import play.api.libs.json.{ JsArray, JsObject, JsString, Json, Writes }
 import play.api.mvc._
 import scalatags.Text.Frag
 
@@ -22,10 +23,10 @@ abstract private[controllers] class OyunController(val env: Env)
   implicit protected def OyunFragToResult(frag: Frag): Result = Ok(frag)
 
   protected val keyPages = new KeyPages(env)
+  protected val renderNotFound = keyPages.notFound _
 
   implicit def ctxLang(implicit ctx: Context) = ctx.lang
   implicit def ctxReq(implicit ctx: Context) = ctx.req
-
 
   protected def Open(f: Context => Fu[Result]): Action[Unit] =
     Open(parse.empty)(f)
@@ -45,6 +46,17 @@ abstract private[controllers] class OyunController(val env: Env)
   private def handleOpen(f: Context => Fu[Result], req: RequestHeader): Fu[Result] =
     reqToCtx(req) flatMap f
 
+
+  def notFound(implicit ctx: Context): Fu[Result] = negotiate(
+    html = fuccess(renderNotFound(ctx)),
+    api = _ => notFoundJson("Resource not found")
+  )
+
+  def notFoundJson(msg: String = "Not found"): Fu[Result] = fuccess {
+    NotFound(jsonError(msg))
+  }
+
+  def jsonError[A: Writes](err: A): JsObject = Json.obj("error" -> err)
 
   protected def negotiate(html: => Fu[Result], api: ApiVersion => Fu[Result]
   )(implicit req: RequestHeader): Fu[Result] =

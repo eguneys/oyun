@@ -6,7 +6,7 @@ import oyun.user.{ User, UserRepo }
 final class EmailAddressValidator() {
 
   private def isAcceptable(email: EmailAddress): Boolean =
-    true
+    email.domain isDefined
 
   def validate(email: EmailAddress): Option[EmailAddressValidator.Acceptable] =
     isAcceptable(email) option EmailAddressValidator.Acceptable(email)

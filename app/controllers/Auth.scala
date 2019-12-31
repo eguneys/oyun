@@ -51,7 +51,9 @@ final class Auth(
         loginForm =>
         loginForm.bindFromRequest.fold(
           err => negotiate(
-            html = fuccess(Unauthorized(html.auth.login(err, referrer))),
+            html = {
+              fuccess(Unauthorized(html.auth.login(err, referrer)))
+            },
             api = _ => ???
           ),
           result =>

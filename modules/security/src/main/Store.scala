@@ -23,6 +23,6 @@ final class Store(
         "up" -> up
       )).void
 
-  def userId(sessionId: String): Fu[Option[User.ID]] = fufail("not implemented")
+  def userId(sessionId: String): Fu[Option[User.ID]] = coll.primitiveOne[User.ID]($doc("_id" -> sessionId, "up" -> true), "user")
 
 }

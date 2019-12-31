@@ -17,7 +17,7 @@ final class UserRepo(
 
   val normalize = User normalize _
 
-  def byId(id: ID): Fu[Option[User]] = ???
+  def byId(id: ID): Fu[Option[User]] = coll.byId[User](id)
 
 
   def named(username: String): Fu[Option[User]] = coll.byId[User](normalize(username))

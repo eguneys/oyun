@@ -1,5 +1,6 @@
 package controllers
 
+import play.api.http._
 import play.api.libs.json.{ JsArray, JsObject, JsString, Json, Writes }
 import play.api.mvc._
 import scalatags.Text.Frag
@@ -45,6 +46,18 @@ abstract private[controllers] class OyunController(val env: Env)
 
   private def handleOpen(f: Context => Fu[Result], req: RequestHeader): Fu[Result] =
     reqToCtx(req) flatMap f
+
+
+  protected def OptionOk[A, B: Writeable: ContentTypeOf](
+    fua: Fu[Option[A]])(op: A => B)(implicit ctx: Context): Fu[Result] =
+    OptionFuOk(fua) { a =>
+      fuccess(op(a))
+    }
+
+  protected def OptionFuOk[A, B: Writeable: ContentTypeOf](
+    fua: Fu[Option[A]]
+  )(op: A => Fu[B])(implicit ctx: Context) =
+    fua flatMap { _.fold(notFound(ctx))(a => op(a) map { Ok(_) }) }
 
 
   def notFound(implicit ctx: Context): Fu[Result] = negotiate(

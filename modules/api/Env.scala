@@ -12,5 +12,7 @@ final class Env(
 )(implicit ec: scala.concurrent.ExecutionContext, system: ActorSystem) {
 
 
+  lazy val lobbyApi = wire[LobbyApi]
+
 
 }

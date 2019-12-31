@@ -34,4 +34,15 @@ final class User(
       case Some(u) => f(u)
     }
   
+
+
+  def list = Open { implicit ctx =>
+    funit flatMap { _ =>
+      negotiate(
+        html =
+          funit map Ok(html.user.list()),
+        api = _ => ???
+      )
+    }
+  }
 }

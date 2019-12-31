@@ -39,7 +39,10 @@ final class OyunComponents(ctx: ApplicationLoader.Context)
   lazy val lobby: Lobby = wire[Lobby]
   lazy val user: User = wire[User]
   lazy val dasher: Dasher = wire[Dasher]
+  lazy val page: Page = wire[Page]
   lazy val main: Main = wire[Main]
+  lazy val blog: Blog = wire[Blog]
+  lazy val prismic: Prismic = wire[Prismic]
 
   val router: Router = {
     val prefix: String = "/"

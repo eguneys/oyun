@@ -4,6 +4,7 @@ GET     /       controllers.Lobby.home
 # User
 
 GET     /@/:username    controllers.User.show(username: String)
+GET     /player         controllers.User.list
 
 GET     /dasher         controllers.Dasher.get
 
@@ -14,6 +15,19 @@ POST    /login  controllers.Auth.authenticate
 POST    /logout controllers.Auth.logout
 GET     /signup controllers.Auth.signup
 POST     /signup controllers.Auth.signupPost
+
+
+# Blog
+
+GET     /blog/:id/:slug controllers.Blog.show(id: String, slug: String, ref: Option[String] ?= None)
+
+# Pages
+
+GET     /thanks         controllers.Page.thanks
+GET     /contact        controllers.Main.contact
+GET     /about          controllers.Page.about
+GET     /faq            controllers.Main.faq
+GET     /source         controllers.Page.source
 
 
 GET     /assets/_$v<\w{6}>/*file        controllers.Main.devAsset(v, path="public", file)

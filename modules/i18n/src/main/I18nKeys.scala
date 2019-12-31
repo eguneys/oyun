@@ -8,6 +8,15 @@ object I18nKeys {
 
 def untranslated(message: String) = new Untranslated(message)
 
+val `aboutX` = new Translated("aboutX", Site)
+val `sourceCode` = new Translated("sourceCode", Site)
+val `mobileApp` = new Translated("mobileApp", Site)
+val `contact` = new Translated("contact", Site)
+val `nbGamesInPlay` = new Translated("nbGamesInPlay", Site)
+val `nbPlayers` = new Translated("nbPlayers", Site)
+val `anonymous` = new Translated("anonymous", Site)
+val `lobby` = new Translated("lobby", Site)
+val `createAGame` = new Translated("createAGame", Site)
 val `freeOnlinePoker` = new Translated("freeOnlinePoker", Site)
 val `playWithAFriend` = new Translated("playWithAFriend", Site)
 val `profile` = new Translated("profile", Site)

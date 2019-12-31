@@ -18,6 +18,7 @@ final class Env(
   val api: oyun.api.Env,
   val user: oyun.user.Env,
   val security: oyun.security.Env,
+  val blog: oyun.blog.Env,
   val oyunCookie: oyun.common.OyunCookie,
   val controllerComponents: ControllerComponents
 )(implicit val system: ActorSystem, val executionContext: ExecutionContext) {
@@ -26,6 +27,10 @@ final class Env(
   val isDev = mode == Mode.Dev
 
   def net = common.netConfig
+
+  def lobbyApi = api.lobbyApi
+
+  lazy val preloader = wire[mashup.Preload]
   
 }
 
@@ -45,12 +50,13 @@ final class EnvBoot(
   import oyun.db.DbConfig.uriLoader
   lazy val mainDb: oyun.db.Db = mongo.blockingDb("main", config.get[ParsedURI]("mongodb.uri"))
 
-  lazy val common: oyun.common.Env = wire[oyun.common.Env]
-  lazy val mongo: oyun.db.Env = wire[oyun.db.Env]
-  lazy val user: oyun.user.Env = wire[oyun.user.Env]
+  lazy val common: oyun.common.Env     = wire[oyun.common.Env]
+  lazy val mongo: oyun.db.Env          = wire[oyun.db.Env]
+  lazy val user: oyun.user.Env         = wire[oyun.user.Env]
   lazy val security: oyun.security.Env = wire[oyun.security.Env]
-  lazy val api: oyun.api.Env = wire[oyun.api.Env]
-  lazy val oyunCookie = wire[oyun.common.OyunCookie]
+  lazy val blog: oyun.blog.Env         = wire[oyun.blog.Env]
+  lazy val api: oyun.api.Env           = wire[oyun.api.Env]
+  lazy val oyunCookie                  = wire[oyun.common.OyunCookie]
 
   val env: oyun.app.Env = {
     val c = wire[oyun.app.Env]

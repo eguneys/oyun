@@ -10,9 +10,10 @@ import views._
 final class KeyPages(env: Env)(implicit ec: scala.concurrent.ExecutionContext) {
 
   def home(status: Results.Status)(implicit ctx: Context): Fu[Result] =
-    funit
-      .map { _ =>
-        html.lobby.home()
+    env.preloader(
+    )
+      .map { h =>
+        html.lobby.home(h)
       }
       .dmap { (html: Frag) =>
         status(html)

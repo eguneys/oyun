@@ -27,12 +27,11 @@ PlayKeys.generateAssetsJar := false
 libraryDependencies ++= Seq(
   macwire.macros, macwire.util, play.json, ws,
   scalaz, scalalib, hasher,
-  reactivemongo.driver, reactivemongo.bson,
-  scalatags,
+  reactivemongo.driver, prismic, scalatags,
   scaffeine
 ) ++ silencer.bundle
 
-lazy val modules = Seq(common, db, user, i18n, security)
+lazy val modules = Seq(common, db, user, i18n, security, blog)
 
 lazy val moduleRefs = modules map projectToRef
 lazy val moduleCPDeps = moduleRefs map { new sbt.ClasspathDependency(_, None) }
@@ -80,4 +79,9 @@ lazy val user = module("user",
 lazy val security = module("security",
   Seq(common, db, i18n),
   Seq(scalatags, hasher) ++ reactivemongo.bundle
+)
+
+lazy val blog = module("blog",
+  Seq(common),
+  Seq(prismic) ++ reactivemongo.bundle
 )

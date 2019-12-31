@@ -41,5 +41,8 @@ final class PimpedFutureOption[A](private val fua: Future[Option[A]]) extends An
   def orFail(msg: => String)(implicit ec: EC): Fu[A] = fua flatMap {
     _.fold[Fu[A]](fufail(msg))(fuccess(_))
   }
+
+  def map2[B](f: A => B)(implicit ec: EC): Fu[Option[B]] = fua.map(_ map f)
+  def dmap2[B](f: A => B): Fu[Option[B]] = fua.map(_ map f)(EC.parasitic)
   
 }

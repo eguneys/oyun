@@ -1,5 +1,16 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <resources>
+  <string name="aboutX">About %s</string>
+  <string name="sourceCode">Source code</string>
+  <string name="mobileApp">Mobile App</string>
+  <string name="contact">Contact</string>
+  <string name="nbGamesInPlay">% games in play</string>
+  <string name="nbPlayers">% players</string>
+
+  <string name="anonymous">Anonymous</string>
+  <string name="lobby">Lobby</string>
+  <string name="createAGame">Create a game</string>
+
   <string name="freeOnlinePoker">Free Online Poker</string>
   <string name="playWithAFriend">Play with a friend</string>
   <string name="profile">Profile</string>

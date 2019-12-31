@@ -25,4 +25,11 @@ final class Store(
 
   def userId(sessionId: String): Fu[Option[User.ID]] = coll.primitiveOne[User.ID]($doc("_id" -> sessionId, "up" -> true), "user")
 
+  def delete(sessionId: String): Funit =
+    coll.update
+      .one(
+        $id(sessionId),
+        $set("up" -> false)
+      ).void
+
 }

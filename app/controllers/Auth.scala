@@ -1,5 +1,6 @@
 package controllers
 
+import play.api.libs.json._
 import play.api.mvc._
 
 import oyun.api.Context
@@ -19,7 +20,15 @@ final class Auth(
 
 
   def authenticateUser(u: UserModel, result: Option[String => Result] = None)
-  (implicit ctx: Context): Fu[Result] = fuccess(Ok("kadjf"))
+  (implicit ctx: Context): Fu[Result] = api.saveAuthentication(u.id) flatMap { sessionId =>
+    negotiate(
+      html = fuccess {
+        val redirectTo = get("referrer") getOrElse routes.Lobby.home.url
+        result.fold(Redirect(redirectTo))(_(redirectTo))
+      },
+      api = _ => ???
+    ) map authenticateCookie(sessionId)
+  }
 
   def login = Open { implicit ctx =>
     val referrer = get("referrer")
@@ -66,6 +75,16 @@ final class Auth(
       }
     )
   }
+
+  def logout = Open { implicit ctx =>
+    val currentSessionId = ~env.security.api.reqSessionId(ctx.req)
+    env.security.store.delete(currentSessionId) >>
+    negotiate(
+      html = Redirect(routes.Auth.login).fuccess,
+      api = _ => Ok(Json.obj("ok" -> true)).fuccess
+    ).dmap(_.withCookies(env.oyunCookie.newSession))
+  }
+    
 
   def signup = Open { implicit ctx =>
     Ok(html.auth.signup(forms.signup.website, env.security.recaptchaPublicConfig)).fuccess

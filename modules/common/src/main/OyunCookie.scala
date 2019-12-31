@@ -12,6 +12,8 @@ final class OyunCookie(baker: SessionCookieBaker) {
     domainRegex.findFirstIn(req.domain).getOrElse(req.domain)
 
 
+  def newSession(implicit req: RequestHeader): Cookie = withSession(_ => Session.emptyCookie)
+
   def withSession(op: Session => Session)(implicit req: RequestHeader): Cookie = cookie(
     baker.COOKIE_NAME,
     baker.encode(baker.serialize(op(req.session)))

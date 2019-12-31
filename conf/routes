@@ -11,8 +11,10 @@ GET     /dasher         controllers.Dasher.get
 
 GET     /login  controllers.Auth.login
 POST    /login  controllers.Auth.authenticate
+POST    /logout controllers.Auth.logout
 GET     /signup controllers.Auth.signup
 POST     /signup controllers.Auth.signupPost
+
 
 GET     /assets/_$v<\w{6}>/*file        controllers.Main.devAsset(v, path="public", file)
 GET     /assets/*file                   controllers.ExternalAssets.at(path="public", file)

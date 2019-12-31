@@ -2,6 +2,9 @@
 <resources>
   <string name="freeOnlinePoker">Free Online Poker</string>
   <string name="playWithAFriend">Play with a friend</string>
+  <string name="profile">Profile</string>
+  <string name="logOut">Log out</string>
+
   <string name="signIn">Sign in</string>
   <string name="signUp">Sign Up</string>
   <string name="login">Login</string>

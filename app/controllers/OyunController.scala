@@ -60,7 +60,12 @@ abstract private[controllers] class OyunController(val env: Env)
 
   protected def negotiate(html: => Fu[Result], api: ApiVersion => Fu[Result]
   )(implicit req: RequestHeader): Fu[Result] =
-    html.dmap(_.withHeaders("Vary" -> "Accept"))
+    oyun.api.Mobile.Api
+      .requestVersion(req)
+      .fold(html) { v =>
+        api(v) dmap (_ as JSON)
+      }
+      .dmap(_.withHeaders("Vary" -> "Accept"))
 
 
   protected def reqToCtx(req: RequestHeader): Fu[HeaderContext] = restoreUser(req) flatMap {

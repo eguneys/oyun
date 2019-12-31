@@ -10,6 +10,8 @@ def untranslated(message: String) = new Untranslated(message)
 
 val `freeOnlinePoker` = new Translated("freeOnlinePoker", Site)
 val `playWithAFriend` = new Translated("playWithAFriend", Site)
+val `profile` = new Translated("profile", Site)
+val `logOut` = new Translated("logOut", Site)
 val `signIn` = new Translated("signIn", Site)
 val `signUp` = new Translated("signUp", Site)
 val `login` = new Translated("login", Site)

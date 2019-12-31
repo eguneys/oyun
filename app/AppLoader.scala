@@ -38,6 +38,7 @@ final class OyunComponents(ctx: ApplicationLoader.Context)
   lazy val auth: Auth = wire[Auth]
   lazy val lobby: Lobby = wire[Lobby]
   lazy val user: User = wire[User]
+  lazy val dasher: Dasher = wire[Dasher]
   lazy val main: Main = wire[Main]
 
   val router: Router = {

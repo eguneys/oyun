@@ -19,8 +19,14 @@ object I18nLangPicker {
   def bestFromRequestHeaders(req: RequestHeader): Option[Lang] =
     req.acceptLanguages.foldLeft(none[Lang]) {
       case (None, lang) => findCloser(lang)
-      case (found, _) => found
+      case (found, _)   => found
     }
+
+  def allFromRequestHeaders(req: RequestHeader): List[Lang] =
+    req.acceptLanguages.flatMap(findCloser).distinct.toList
+
+  def byStr(str: String): Option[Lang] =
+    Lang get str flatMap findCloser
 
   private val defaultByLanguage: Map[String, Lang] =
     I18nDb.langs.foldLeft(Map.empty[String, Lang]) {
@@ -29,6 +35,7 @@ object I18nLangPicker {
 
   def findCloser(to: Lang): Option[Lang] =
     if (I18nDb.langs contains to) Some(to)
-    else defaultByLanguage.get(to.language)
-  
+    else
+      defaultByLanguage.get(to.language) // orElse
+        // oyunkeyfCodes.get(to.language)
 }

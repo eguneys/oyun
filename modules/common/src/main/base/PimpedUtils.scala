@@ -22,3 +22,16 @@ final class PimpedOption[A](private val self: Option[A]) extends AnyVal {
   def has(a: A) = self contains a
 
 }
+
+final class PimpedString(private val s: String) extends AnyVal {
+
+  def replaceIf(t: Char, r: Char): String =
+    if (s.indexOf(t) >= 0) s.replace(t, r) else s
+
+  def replaceIf(t: Char, r: CharSequence): String =
+    if (s.indexOf(t) >= 0) s.replace(String.valueOf(t), r) else s
+
+  def replaceIf(t: CharSequence, r: CharSequence): String =
+    if (s.contains(t)) s.replace(t, r) else s
+  
+}

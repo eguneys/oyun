@@ -5,6 +5,8 @@ GET     /       controllers.Lobby.home
 
 GET     /@/:username    controllers.User.show(username: String)
 
+GET     /dasher         controllers.Dasher.get
+
 # Authentication
 
 GET     /login  controllers.Auth.login

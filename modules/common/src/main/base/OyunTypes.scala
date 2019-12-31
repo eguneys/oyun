@@ -3,6 +3,7 @@ package oyun.base
 import scala.concurrent.Future
 
 import ornicar.scalalib.{ ValidTypes, Zero }
+import play.api.libs.json.{ JsObject }
 
 trait OyunTypes extends ValidTypes {
 
@@ -33,6 +34,8 @@ trait OyunTypes extends ValidTypes {
   implicit def fuZero[A](implicit az: Zero[A]) = new Zero[Fu[A]] {
     def zero = fuccess(az.zero)
   }
+
+  implicit val jsObjectZero = Zero.instance(JsObject(Seq.empty))
 
 
 }

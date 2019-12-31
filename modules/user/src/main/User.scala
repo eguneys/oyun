@@ -1,11 +1,15 @@
 package oyun.user
 
+import oyun.common.{ EmailAddress, LightUser, NormalizedEmailAddress }
+
 case class User(
   id: String,
   username: String,
   enabled: Boolean,
   lang: Option[String]
 ) {
+
+  def light = LightUser(id = id, name = username)
 
 
 }

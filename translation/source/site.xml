@@ -4,8 +4,15 @@
   <string name="sourceCode">Source code</string>
   <string name="mobileApp">Mobile App</string>
   <string name="contact">Contact</string>
+  <string name="thankYou">Thank You</string>
+  <string name="contribute">Contribute</string>
+
   <string name="nbGamesInPlay">% games in play</string>
   <string name="nbPlayers">% players</string>
+
+  <string name="players">Players</string>
+  <string name="onlinePlayers">Online Players</string>
+
 
   <string name="anonymous">Anonymous</string>
   <string name="lobby">Lobby</string>

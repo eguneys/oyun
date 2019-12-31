@@ -40,7 +40,7 @@ final class User(
     funit flatMap { _ =>
       negotiate(
         html =
-          funit map Ok(html.user.list()),
+          funit inject Ok(html.user.list()),
         api = _ => ???
       )
     }

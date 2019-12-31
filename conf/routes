@@ -28,7 +28,11 @@ GET     /contact        controllers.Main.contact
 GET     /about          controllers.Page.about
 GET     /faq            controllers.Main.faq
 GET     /source         controllers.Page.source
+GET     /qa             controllers.Main.movedPermanently(to: String = "/faq")
+GET     /help           controllers.Main.movedPermanently(to: String = "/contact")
 
+# Help
+GET     /help/contribute        controllers.Page.help
 
 GET     /assets/_$v<\w{6}>/*file        controllers.Main.devAsset(v, path="public", file)
 GET     /assets/*file                   controllers.ExternalAssets.at(path="public", file)

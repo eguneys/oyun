@@ -17,5 +17,9 @@ final class Main(
   def faq = Open { implicit ctx =>
     Ok(html.site.faq()).fuccess
   }
+
+  def movedPermanently(to: String) = Action {
+    MovedPermanently(to)
+  }
   
 }

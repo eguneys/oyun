@@ -56,6 +56,9 @@ object layout {
   private val spaceRegex = """\s{2,}+""".r
   private def spaceless(html: String) = raw(spaceRegex.replaceAllIn(html.replace("\\n", ""), ""))
 
+  private val dataUser = attr("data-user")
+  private val dataSocketDomain = attr("data-socket-domain")
+
   def apply(
     title: String,
     fullTitle: Option[String] = None,
@@ -83,7 +86,12 @@ object layout {
         cls := List(
           "mobile" -> false
         ),
-        dataDev := (!isProd).option("true")
+        dataDev := (!isProd).option("true"),
+        dataUser := ctx.userId,
+        dataSocketDomain := socketDomain,
+        dataAssetUrl := assetBaseUrl,
+        dataAssetVersion := assetVersion.value,
+        dataTheme := ctx.currentBg
       )(
         siteHeader(playing),
         div(

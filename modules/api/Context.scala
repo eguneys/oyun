@@ -20,6 +20,8 @@ sealed trait Context extends oyun.user.UserContextWrapper {
 
   def lang = userContext.lang
 
+  lazy val currentBg = "dark"
+
 }
 
 

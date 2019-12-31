@@ -1,0 +1,90 @@
+
+server {
+	listen 80;
+	server_name oyunkeyf.net;
+	return 301 https://oyunkeyf.net$request_uri;
+}
+
+server {
+	listen 443 ssl;
+ 	server_name oyunkeyf.net;
+ 	ssl_certificate		/etc/letsencrypt/live/oyunkeyf.net/fullchain.pem;
+ 	ssl_certificate_key	/etc/letsencrypt/live/oyunkeyf.net/privkey.pem;
+
+	gzip			on;
+	gzip_min_length		1000;
+	gzip_proxied		expired no-cache no-store private auth;
+	gzip_types		text/plain
+			 	application/javascript
+				application/json
+				text/css
+				text/javascript
+				text/cache-manifest
+				application/xml;
+
+	#expires		24h;
+	#add_header	Cache-Control private;
+ 
+ 	location / {
+ 		proxy_pass http://localhost:9000;
+ 		proxy_set_header X-Real-IP $remote_addr;
+ 		proxy_set_header Host $host;
+ 		proxy_set_header X-Forwarded-For $proxy_add_x_forwarded_for;
+	#	if ($request_method = 'OPTIONS') {
+	#	  add_header 'Access-Control-Allow-Origin' *;
+	#	  add_header 'Access-Control-Allow-Methods' 'GET, POST, OPTIONS';
+	#	  add_header 'Access-Control-Allow-Credentials' 'true';
+	#	  add_header 'Access-Control-Allow-Headers' 'DNT,X-CustomHeader,Keep-Alive,User-Agent,X-Requested-With,If-Modified-Since,Cache-Control,Content-Type';
+	#	  add_header 'Content-Length' 0;
+	#	  return 204;
+	#	} 
+	#	add_header 'Access-Control-Allow-Origin' * always;
+	#	add_header 'Access-Control-Allow-Credentials' 'true' always;
+ 	}
+ 
+}
+
+server {
+	listen 9021 ssl;
+ 	server_name socket.oyunkeyf.net;
+ 	ssl_certificate		/etc/letsencrypt/live/socket.oyunkeyf.net/fullchain.pem;
+ 	ssl_certificate_key	/etc/letsencrypt/live/socket.oyunkeyf.net/privkey.pem;
+ 
+ 	location / {
+
+ 		proxy_pass http://localhost:9000;
+ 		proxy_http_version 1.1;
+ 		proxy_set_header Upgrade $http_upgrade;
+ 		proxy_set_header Connection "upgrade";
+ 		proxy_set_header X-Real-Ip $remote_addr;
+ 		proxy_set_header Host $host;
+ 		proxy_set_header X-Forwarded-For $proxy_add_x_forwarded_for;
+
+
+ 	}
+ 
+}
+
+
+
+#server {
+# 
+# 	listen 443 ssl;
+# 	#server_name socket.oyunkeyf.net;
+# 	ssl_certificate		/etc/letsencrypt/live/oyunkeyf.net/fullchain.pem;
+# 	ssl_certificate_key	/etc/letsencrypt/live/oyunkeyf.net/privkey.pem;
+# 
+#	listen 9021 ssl;
+# 
+# 	location / {
+# 		proxy_pass http://localhost:9000;
+# 		proxy_http_version 1.1;
+# 		proxy_set_header Upgrade $http_upgrade;
+# 		proxy_set_header Connection "upgrade";
+# 		proxy_set_header X-Real-Ip $remote_addr;
+# 		proxy_set_header Host $host;
+# 		proxy_set_header X-Forwarded-For $proxy_add_x_forwarded_for;
+# 	}
+#}
+
+

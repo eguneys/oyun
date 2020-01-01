@@ -7,8 +7,8 @@
   <string name="thankYou">Thank You</string>
   <string name="contribute">Contribute</string>
 
-  <string name="nbGamesInPlay">% games in play</string>
-  <string name="nbPlayers">% players</string>
+  <string name="nbGamesInPlay">%s games in play</string>
+  <string name="nbPlayers">%s players</string>
 
   <string name="players">Players</string>
   <string name="onlinePlayers">Online Players</string>

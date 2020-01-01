@@ -10,7 +10,7 @@ final class BlogApi(
 
   private def collection = config.collection
 
-  private val prismicBuilder = new Prismic
+  private val prismicBuilder = Api
 
   def prismicApi = prismicBuilder.get(config.apiUrl)
 

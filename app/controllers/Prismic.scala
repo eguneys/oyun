@@ -27,6 +27,17 @@ final class Prismic(
     }
   }
 
+  // def getByUid(name: String) =
+  //   prismicApi flatMap { api =>
+  //     api.findByUid(name, api.master.ref) map2 { (doc: io.prismic.Document) =>
+  //       doc -> makeLinkResolver(api)
+  //     }
+  //   } recover {
+  //     case e: Exception =>
+  //       logger.error(s"getByUid:$name", e)
+  //       none
+  //   } 
+
   def getBookmark(name: String) =
     prismicApi flatMap { api =>
       api.bookmarks.get(name) ?? getDocument map2 { (doc: io.prismic.Document) =>

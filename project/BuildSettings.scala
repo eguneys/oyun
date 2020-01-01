@@ -9,7 +9,7 @@ object BuildSettings {
 
   def buildSettings = Defaults.coreDefaultSettings ++ Seq(
     version := "3.0",
-    organization := "org.pipoker",
+    organization := "org.oyunkeyf",
     scalaVersion := globalScalaVersion,
     resolvers := Dependencies.Resolvers.commons,
     scalacOptions := compilerOptions,

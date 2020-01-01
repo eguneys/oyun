@@ -13,7 +13,9 @@ final class Page(
 
   private def helpBookmark(name: String) = Open { implicit ctx =>
     OptionOk(prismicC getBookmark name) {
-      case (doc, resolver) => views.html.site.help.page(name, doc, resolver)
+      case (doc, resolver) => {
+        views.html.site.help.page(name, doc, resolver)
+      }
     }
   }
 

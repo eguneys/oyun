@@ -1,0 +1,18 @@
+@import 'layout';
+/* @import 'app/app'; */
+@import 'table';
+@import 'about';
+
+body {
+  /* improves preload */
+  overflow-y: scroll;
+}
+
+#main-wrap {
+  --main-max-width: 1400px;
+}
+
+.lobby__side {
+  @extend %flex-column;
+  overflow: hidden;
+}

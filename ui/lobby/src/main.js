@@ -14,6 +14,8 @@ export function start(opts) {
     mrender.render(view(ctrl));
   };
 
+  redraw();
+
   return {
     socketReceive: ctrl.socket.receive,
     redraw: ctrl.redraw

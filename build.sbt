@@ -28,10 +28,10 @@ libraryDependencies ++= Seq(
   macwire.macros, macwire.util, play.json, ws,
   scalaz, scalalib, hasher,
   reactivemongo.driver, prismic, scalatags,
-  scaffeine
+  scaffeine, lettuce
 ) ++ silencer.bundle
 
-lazy val modules = Seq(common, db, user, i18n, security, blog)
+lazy val modules = Seq(common, db, user, i18n, security, blog, socket, lobby)
 
 lazy val moduleRefs = modules map projectToRef
 lazy val moduleCPDeps = moduleRefs map { new sbt.ClasspathDependency(_, None) }
@@ -84,4 +84,14 @@ lazy val security = module("security",
 lazy val blog = module("blog",
   Seq(common),
   Seq(prismic) ++ reactivemongo.bundle
+)
+
+lazy val lobby = module("lobby",
+  Seq(common, db, user, socket),
+  Seq(lettuce) ++ reactivemongo.bundle
+)
+
+lazy val socket = module("socket",
+  Seq(common),
+  Seq(lettuce)
 )

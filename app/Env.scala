@@ -19,6 +19,8 @@ final class Env(
   val user: oyun.user.Env,
   val security: oyun.security.Env,
   val blog: oyun.blog.Env,
+  val socket: oyun.socket.Env,
+  val lobby: oyun.lobby.Env,
   val oyunCookie: oyun.common.OyunCookie,
   val controllerComponents: ControllerComponents
 )(implicit val system: ActorSystem, val executionContext: ExecutionContext) {
@@ -55,6 +57,8 @@ final class EnvBoot(
   lazy val user: oyun.user.Env         = wire[oyun.user.Env]
   lazy val security: oyun.security.Env = wire[oyun.security.Env]
   lazy val blog: oyun.blog.Env         = wire[oyun.blog.Env]
+  lazy val socket: oyun.socket.Env     = wire[oyun.socket.Env]
+  lazy val lobby: oyun.lobby.Env       = wire[oyun.lobby.Env]
   lazy val api: oyun.api.Env           = wire[oyun.api.Env]
   lazy val oyunCookie                  = wire[oyun.common.OyunCookie]
 

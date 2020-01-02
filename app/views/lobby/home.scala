@@ -51,6 +51,7 @@ Json.obj(
             ),
           )
         ),
+        bits.lobbyApp,
         div(cls := "lobby__side")(
 
         ),

@@ -9,5 +9,8 @@
     "babelify": "^10.0.0",
     "gulp": "^4.0.2",
     "jsProject": "../@build/jsProject"
+  },
+  "dependencies": {
+    "mithril": "^2.0.4"
   }
 }

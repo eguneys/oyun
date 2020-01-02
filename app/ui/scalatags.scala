@@ -20,6 +20,10 @@ trait ScalatagsAttrs {
 
 trait ScalatagsSnippets extends Cap {
 
+  import scalatags.Text.all._
+
+  val nbsp = raw("&nbsp;")
+
 }
 
 trait ScalatagsBundle

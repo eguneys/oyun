@@ -4,6 +4,7 @@ Object.defineProperty(exports, "__esModule", {
   value: true
 });
 exports.spinner = spinner;
+exports.mclasses = mclasses;
 
 var _hyperscript = _interopRequireDefault(require("mithril/hyperscript"));
 
@@ -21,3 +22,9 @@ function spinner() {
 }
 
 ;
+
+function mclasses(mm) {
+  return Object.keys(mm).filter(function (_) {
+    return mm[_];
+  }).join(' ');
+}

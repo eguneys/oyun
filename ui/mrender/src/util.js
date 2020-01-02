@@ -7,3 +7,8 @@ export function spinner() {
     ])
   ]);
 };
+
+export function mclasses(mm) {
+  return Object.keys(mm)
+    .filter(_ => mm[_]).join(' ');
+}

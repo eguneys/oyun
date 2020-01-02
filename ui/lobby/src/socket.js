@@ -5,6 +5,14 @@ export default function LobbySocket(send, ctrl) {
   this.handlers = {
   };
 
+  this.realTimeIn = () => {
+    this.send('hookIn');
+  };
+
+  this.realTimeOut = () => {
+    this.send('hookOut');
+  };
+
   this.receive = (type, data) => {
     if (this.handlers[type]) {
       this.handlers[type](data);

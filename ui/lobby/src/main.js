@@ -7,13 +7,14 @@ import boot from './boot';
 export function start(opts) {
 
   const mrender = new Mrender(opts.element);
-  
-  let ctrl = new makeCtrl(opts, redraw);
 
+  let ctrl;
+  
   const redraw = () => {
     mrender.render(view(ctrl));
   };
 
+  ctrl = new makeCtrl(opts, redraw);
   redraw();
 
   return {

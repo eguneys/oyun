@@ -13,8 +13,6 @@ final class RemoteSocket(
 
 
   val baseHandler: Handler = {
-    case In.ConnectUser(userId) =>
-      println("connect user", userId)
     case In.WsBoot =>
       logger.warn("Remote socket boot")
   }
@@ -26,7 +24,9 @@ final class RemoteSocket(
       override def message(_channel: String, message: String): Unit =
         reader(RawMsg(message)) collect handler match {
           case Some(_) => // processed
-          case None => logger.warn(s"Unhandled $channel $message")
+          case None => {
+            logger.warn(s"Unhandled $channel $message")
+          }
         }
     })
     val subPromise = Promise[Unit]

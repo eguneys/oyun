@@ -1,8 +1,10 @@
 package oyun.base
 
-import OyunTypes._
+import akka.actor.ActorSystem
 import scala.concurrent.duration._
 import scala.concurrent.{ ExecutionContext => EC, Future, Await }
+
+import OyunTypes._
 
 final class PimpedFuture[A](private val fua: Fu[A]) extends AnyVal {
 
@@ -28,6 +30,18 @@ final class PimpedFuture[A](private val fua: Fu[A]) extends AnyVal {
   def await(duration: FiniteDuration, name: String): A =
     Await.result(fua, duration)
 
+
+  def withTimeout(
+    duration: FiniteDuration,
+    error: => Throwable
+  )(implicit ec: EC, system: ActorSystem): Fu[A] = {
+    Future firstCompletedOf Seq(
+      fua,
+      akka.pattern.after(duration, system.scheduler)(Future failed error)
+    )
+  }
+
+
 }
 
 final class PimpedFutureBoolean(private val fua: Fu[Boolean]) extends AnyVal {
@@ -41,6 +55,8 @@ final class PimpedFutureOption[A](private val fua: Future[Option[A]]) extends An
   def orFail(msg: => String)(implicit ec: EC): Fu[A] = fua flatMap {
     _.fold[Fu[A]](fufail(msg))(fuccess(_))
   }
+
+  def getOrElse(other: => Fu[A])(implicit ec: EC): Fu[A] = fua flatMap { _.fold(other)(fuccess) }
 
   def map2[B](f: A => B)(implicit ec: EC): Fu[Option[B]] = fua.map(_ map f)
   def dmap2[B](f: A => B): Fu[Option[B]] = fua.map(_ map f)(EC.parasitic)

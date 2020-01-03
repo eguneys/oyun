@@ -19,6 +19,10 @@ final class UserRepo(
 
   def byId(id: ID): Fu[Option[User]] = coll.byId[User](id)
 
+  def enabledById(id: ID): Fu[Option[User]] =
+    coll.one[User](enabledSelect ++ $id(id))
+
+  val enabledSelect = $doc(F.enabled -> true)
 
   def named(username: String): Fu[Option[User]] = coll.byId[User](normalize(username))
 

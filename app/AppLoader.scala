@@ -1,5 +1,6 @@
 package oyun.app
 
+import akka.actor.CoordinatedShutdown
 import com.softwaremill.macwire._
 import play.api._
 import play.api.mvc._
@@ -31,6 +32,8 @@ final class OyunComponents(ctx: ApplicationLoader.Context)
 
   implicit def mimeTypes = fileMimeTypes
   lazy val devAssetsController = wire[ExternalAssets]
+
+  lazy val shutdown = CoordinatedShutdown(system)
 
   lazy val boot: oyun.app.EnvBoot = wire[oyun.app.EnvBoot]
   lazy val env: oyun.app.Env = boot.env

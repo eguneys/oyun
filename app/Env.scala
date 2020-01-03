@@ -40,7 +40,8 @@ final class EnvBoot(
   config: Configuration,
   environment: Environment,
   controllerComponents: ControllerComponents,
-  cookieBaker: SessionCookieBaker
+  cookieBaker: SessionCookieBaker,
+  shutdown: CoordinatedShutdown
 )(implicit ec: ExecutionContext, system: ActorSystem, ws: WSClient) {
 
 

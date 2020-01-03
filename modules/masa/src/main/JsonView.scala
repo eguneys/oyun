@@ -1,7 +1,15 @@
-package oyun.round
+package oyun.masa
 
 import play.api.libs.json._
 import scala.concurrent.ExecutionContext
+
+final class JsonView(
+)(implicit ec: ExecutionContext) {
+
+  import JsonView._
+
+
+}
 
 object JsonView {
 

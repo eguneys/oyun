@@ -1,8 +1,8 @@
-package oyun.round
+package oyun.masa
 
 import oyun.user.{ User }
 
-private[round] case class Player(
+private[masa] case class Player(
   _id: Player.ID, // random
   roundId: Round.ID,
   userId: Option[User.ID]

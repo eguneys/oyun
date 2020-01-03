@@ -15,21 +15,12 @@ private class RoundConfig(
 @Module
 final class Env(
   appConfig: Configuration,
-  db: oyun.db.Db,
-  lightUserApi: oyun.user.LightUserApi
+  db: oyun.db.Db
 )(
   implicit ec: scala.concurrent.ExecutionContext,
   system: ActorSystem) {
 
 
   private val config = appConfig.get[RoundConfig]("round")(AutoConfig.loader)
-
-  lazy val RoundRepo = new RoundRepo()
-  lazy val PlayerRepo = new PlayerRepo()
-
-  lazy val api: RoundApi = wire[RoundApi]
-
-
-  lazy val apiJsonView = wire[ApiJsonView]
 
 }

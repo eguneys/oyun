@@ -1,4 +1,4 @@
-package oyun.round
+package oyun.masa
 
 final case class Round(
   id: Round.ID

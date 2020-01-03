@@ -22,4 +22,8 @@ object LightUser {
   }
 
 
+  final class Getter(f: UserID => Fu[Option[LightUser]]) extends (UserID => Fu[Option[LightUser]]) {
+    def apply(u: UserID) = f(u)
+  }
+
 }

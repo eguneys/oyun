@@ -1,6 +1,7 @@
 package oyun.base
 
 import scala.util.Try
+import org.joda.time.{ DateTime, Duration }
 
 import ornicar.scalalib.Zero
 
@@ -34,4 +35,10 @@ final class PimpedString(private val s: String) extends AnyVal {
   def replaceIf(t: CharSequence, r: CharSequence): String =
     if (s.contains(t)) s.replace(t, r) else s
   
+}
+
+final class PimpedDateTime(private val date: DateTime) extends AnyVal {
+  def getSeconds: Long = date.getMillis / 1000
+  def getCentis: Long  = date.getMillis / 10
+  def toNow            = new Duration(date, DateTime.now)
 }

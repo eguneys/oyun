@@ -1,6 +1,7 @@
 package oyun.base
 
 import akka.actor.ActorSystem
+import scala.collection.BuildFrom
 import scala.concurrent.duration._
 import scala.concurrent.{ ExecutionContext => EC, Future, Await }
 
@@ -61,4 +62,8 @@ final class PimpedFutureOption[A](private val fua: Future[Option[A]]) extends An
   def map2[B](f: A => B)(implicit ec: EC): Fu[Option[B]] = fua.map(_ map f)
   def dmap2[B](f: A => B): Fu[Option[B]] = fua.map(_ map f)(EC.parasitic)
   
+}
+
+final class PimpedIterableFuture[A, M[X] <: IterableOnce[X]](private val t: M[Fu[A]]) extends AnyVal {
+  def sequenceFu(implicit bf: BuildFrom[M[Fu[A]], A, M[A]], ec: EC): Fu[M[A]] = Future.sequence(t)
 }

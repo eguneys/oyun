@@ -13,17 +13,18 @@ import oyun.user.User
 
 final class Env(
   val config: Configuration,
-  val mode: Mode,
   val common: oyun.common.Env,
   val api: oyun.api.Env,
   val user: oyun.user.Env,
   val security: oyun.security.Env,
   val blog: oyun.blog.Env,
+  val memo: oyun.memo.Env,
   val socket: oyun.socket.Env,
   val lobby: oyun.lobby.Env,
+  val round: oyun.round.Env,
   val oyunCookie: oyun.common.OyunCookie,
   val controllerComponents: ControllerComponents
-)(implicit val system: ActorSystem, val executionContext: ExecutionContext) {
+)(implicit val system: ActorSystem, val executionContext: ExecutionContext, val mode: play.api.Mode) {
 
   val isProd = mode == Mode.Prod
   val isDev = mode == Mode.Dev
@@ -45,7 +46,7 @@ final class EnvBoot(
 )(implicit ec: ExecutionContext, system: ActorSystem, ws: WSClient) {
 
 
-  def mode = environment.mode
+  implicit def mode = environment.mode
   def baseUrl = common.netConfig.baseUrl
   def net = common.netConfig
 
@@ -54,12 +55,14 @@ final class EnvBoot(
   lazy val mainDb: oyun.db.Db = mongo.blockingDb("main", config.get[ParsedURI]("mongodb.uri"))
 
   lazy val common: oyun.common.Env     = wire[oyun.common.Env]
+  lazy val memo: oyun.memo.Env         = wire[oyun.memo.Env]
   lazy val mongo: oyun.db.Env          = wire[oyun.db.Env]
   lazy val user: oyun.user.Env         = wire[oyun.user.Env]
   lazy val security: oyun.security.Env = wire[oyun.security.Env]
   lazy val blog: oyun.blog.Env         = wire[oyun.blog.Env]
   lazy val socket: oyun.socket.Env     = wire[oyun.socket.Env]
   lazy val lobby: oyun.lobby.Env       = wire[oyun.lobby.Env]
+  lazy val round: oyun.round.Env       = wire[oyun.round.Env]
   lazy val api: oyun.api.Env           = wire[oyun.api.Env]
   lazy val oyunCookie                  = wire[oyun.common.OyunCookie]
 

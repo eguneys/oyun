@@ -7,6 +7,7 @@ import play.api.Configuration
 import play.api.libs.ws.WSClient
 
 import oyun.common.config._
+import oyun.common.LightUser
 
 private class UserConfig(
   @ConfigName("collection.user") val collectionUser: CollName,
@@ -16,11 +17,14 @@ private class UserConfig(
 @Module
 final class Env(
   appConfig: Configuration,
-  db: oyun.db.Db
+  db: oyun.db.Db,
+  cacheApi: oyun.memo.CacheApi
 )(implicit ec: scala.concurrent.ExecutionContext, system: ActorSystem, ws: WSClient) {
 
   private val config = appConfig.get[UserConfig]("user")(AutoConfig.loader)
 
+  val lightUserApi: LightUserApi = wire[LightUserApi]
+  val lightUser = lightUserApi.async
 
   val repo = new UserRepo(db(config.collectionUser))
 

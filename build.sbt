@@ -31,7 +31,7 @@ libraryDependencies ++= Seq(
   scaffeine, lettuce
 ) ++ silencer.bundle
 
-lazy val modules = Seq(common, db, user, i18n, security, blog, hub, socket, lobby)
+lazy val modules = Seq(common, db, user, i18n, security, blog, hub, socket, lobby, round)
 
 lazy val moduleRefs = modules map projectToRef
 lazy val moduleCPDeps = moduleRefs map { new sbt.ClasspathDependency(_, None) }
@@ -71,7 +71,7 @@ lazy val db = module("db",
 )
 
 lazy val user = module("user",
-  Seq(common, db),
+  Seq(common, db, memo),
   Seq(hasher) ++ reactivemongo.bundle
 )
 
@@ -87,12 +87,22 @@ lazy val blog = module("blog",
 )
 
 lazy val lobby = module("lobby",
-  Seq(common, db, user, socket, hub),
+  Seq(common, db, user, memo, socket, hub),
   Seq(lettuce) ++ reactivemongo.bundle
 )
 
+lazy val round = module("round",
+  Seq(common, db, user, memo, socket, hub),
+  Seq(lettuce) ++ reactivemongo.bundle
+)
+
+lazy val memo = module("memo",
+  Seq(common, db),
+  Seq(scaffeine) ++ reactivemongo.bundle
+)
+
 lazy val socket = module("socket",
-  Seq(common, hub),
+  Seq(common, hub, memo),
   Seq(lettuce)
 )
 

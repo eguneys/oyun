@@ -8,7 +8,6 @@ final class JsonView(
 
   import JsonView._
 
-
 }
 
 object JsonView {
@@ -21,5 +20,13 @@ object JsonView {
     } yield Json
       .obj("id" -> player.id)
       .add("light" -> light)
+
+
+  implicit val stakesWrites: OWrites[Masa.Stakes] = OWrites { stakes =>
+    Json.obj(
+      "stakes" -> stakes.stakesString,
+      "buyIn" -> stakes.buyIn
+    )
+  }
   
 }

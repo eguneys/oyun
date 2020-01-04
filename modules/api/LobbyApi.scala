@@ -9,15 +9,17 @@ final class LobbyApi(
 )(implicit ec: scala.concurrent.ExecutionContext) {
 
   private def masaApi = masaEnv.api
-  private def masaJsonView = masaEnv.jsonView
 
   def apply(implicit ctx: Context): Fu[JsObject] =
-    funit inject {
+    for {
+      masas <- masaApi.fetchVisibleMasas
+      masasJson <- masaEnv apiJsonView masas
+    } yield {
       Json.obj(
         "me" -> ctx.me.map { u =>
           Json.obj("username" -> u.username)
-        }
-      )
+        },
+      ) ++ masasJson
     }
   
 }

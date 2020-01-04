@@ -4,7 +4,7 @@ import oyun.user.{ User }
 
 private[masa] case class Player(
   _id: Player.ID, // random
-  roundId: Round.ID,
+  masaId: Masa.ID,
   userId: Option[User.ID]
 ) {
 

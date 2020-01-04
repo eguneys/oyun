@@ -28,8 +28,10 @@ final class Env(
   lazy val MasaRepo = new MasaRepo()
   lazy val PlayerRepo = new PlayerRepo()
 
-  lazy val api: RoundApi = wire[RoundApi]
+  private lazy val masaScheduler = wire[MasaScheduler]
+  masaScheduler.scheduleNow()
 
+  lazy val api: MasaApi = wire[MasaApi]
 
   lazy val jsonView = wire[JsonView]
 

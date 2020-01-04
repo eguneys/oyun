@@ -9,6 +9,8 @@ final class ApiJsonView(
   lightUserApi: LightUserApi
 )(implicit ctx: scala.concurrent.ExecutionContext) {
 
+  import JsonView._
+
   def apply(masas: Masas): Fu[JsObject] =
     for {
       created <- masas.collect(visibleJson).sequenceFu
@@ -27,7 +29,9 @@ final class ApiJsonView(
 
   def baseJson(masa: Masa): JsObject =
     Json
-      .obj("id" -> masa.id)
+      .obj("id" -> masa.id,
+        "stakes" -> masa.stakes,
+        "nbSeats" -> masa.nbSeats.nb)
 
   def playersJson(masa: Masa): Fu[JsObject] =
     for {

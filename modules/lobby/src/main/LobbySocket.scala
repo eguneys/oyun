@@ -82,7 +82,8 @@ final class LobbySocket(
 
   private val handler: Handler = {
     case P.In.ConnectSris(cons) =>
-    case P.In.DisconnectSris(sris) => trouper ! LeaveBatch(sris)
+    case P.In.DisconnectSris(sris) => 
+      trouper ! LeaveBatch(sris)
     case P.In.WsBoot =>
       logger.warn("Remote socket boot")
       trouper ! LeaveAll

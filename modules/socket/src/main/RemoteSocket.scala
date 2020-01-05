@@ -109,6 +109,13 @@ object RemoteSocket {
       val baseReader: Reader = raw =>
       raw.path match {
         case "connect/user" => ConnectUser(raw.args).some
+        case "connect/sris" =>
+          ConnectSris {
+            commas(raw.args) map (_ split ' ') map { s =>
+              (Sri(s(0)), s lift 1)
+            }
+          }.some
+        case "disconnect/sris" => DisconnectSris(commas(raw.args) map Sri.apply).some
         case "tell/sri" => raw.get(3)(tellSriMapper)
         case "boot" => WsBoot.some
         case _ => None
@@ -122,6 +129,7 @@ object RemoteSocket {
           } yield TellSri(Sri(sri), optional(user), typ, obj)
       }
 
+      def commas(str: String): Array[String] = if (str == "-") Array.empty else str split ","
       def optional(str: String): Option[String] = if (str == "-") None else Some(str)
     }
 

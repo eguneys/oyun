@@ -17,4 +17,7 @@ final class MasaRepo() {
     masas = masas.filterNot(_.id == masa.id)
     funit
   }
+
+  def byId(masaId: Masa.ID): Fu[Option[Masa]] =
+    fuccess(masas.find(_.id == masaId))
 }

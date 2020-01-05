@@ -5,18 +5,20 @@ import scala.concurrent.Promise
 
 
 import actorApi._
+import oyun.masa.Pov
 import oyun.hub.Trouper
 import oyun.socket.RemoteSocket.{ Protocol => P, _ }
 import oyun.socket.Socket.{ Sri }
+import oyun.socket.Socket.{ makeMessage, Sri }
 import oyun.user.User
 
 final class LobbySocket(
   userRepo: oyun.user.UserRepo,
-  remoteSocketApi: oyun.socket.RemoteSocket
+  remoteSocketApi: oyun.socket.RemoteSocket,
+  lobby: LobbyTrouper
 )(implicit ec: scala.concurrent.ExecutionContext) {
 
   import LobbySocket._
-
   type SocketController = PartialFunction[(String, JsObject), Unit]
 
   val trouper: Trouper = new Trouper {
@@ -32,17 +34,34 @@ final class LobbySocket(
       case LeaveAll =>
         members.clear()
 
+      case JoinMasa(sri, masa, joinSide) =>
+        send(P.Out.tellSri(sri, joinMasaRedirect(masa pov joinSide)))
     }
+
+    private def joinMasaRedirect(pov: Pov) =
+      makeMessage("redirect",
+        Json.obj(
+          "id" -> pov.fullId,
+          "url" -> s"/${pov.fullId}"
+        )
+          .add("cookie" -> oyun.masa.AnonCookie.json(pov))
+      )
 
     private def quit(sri: Sri): Unit = {
       members -= sri.value
     }
   }
 
+  // solve circular reference
+  lobby ! LobbyTrouper.SetSocket(trouper)
+
 
   def controller(member: Member): SocketController = {
     case ("hookIn", _) =>
-
+    case ("join", o) =>
+      o str "d" foreach { id =>
+        lobby ! BiteMasa(id, member.sri, member.user)
+      }
   }
 
   private def getOrConnect(sri: Sri, userOpt: Option[User.ID]): Fu[Member] =
@@ -75,12 +94,14 @@ final class LobbySocket(
       }
   }
 
-  private val messagesHandled: Set[String] = Set("hookIn", "hookOut")
+  private val messagesHandled: Set[String] = Set("join", "hookIn", "hookOut")
 
 
 
 
   remoteSocketApi.subscribe("lobby-in", P.In.baseReader)(handler orElse remoteSocketApi.baseHandler)
+
+  private val send: String => Unit = remoteSocketApi.makeSender("lobby-out").apply _
   
 }
 

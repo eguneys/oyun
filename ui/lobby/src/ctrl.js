@@ -40,8 +40,19 @@ export default function LobbyController(opts, redraw) {
 
 
   this.clickMasa = (id) => {
+    if (this.redirecting) return;
     const masa = masaRepo.find(this, id);
     this.socket.send('join', masa.id);
+  };
+
+
+  this.setRedirecting = () => {
+    this.redirecting = true;
+    setTimeout(() => {
+      this.redirecting = false;
+      this.redraw();
+    }, 4000);
+    this.redraw();
   };
 
 }

@@ -2,6 +2,7 @@ package oyun.socket
 
 import akka.actor.{ ActorSystem, CoordinatedShutdown }
 import io.lettuce.core._
+import io.lettuce.core.pubsub.StatefulRedisPubSubConnection
 import play.api.libs.json._
 import scala.concurrent.{ Future, Promise }
 
@@ -29,6 +30,14 @@ final class RemoteSocket(
       logger.warn("Remote socket boot")
   }
 
+  final class StoppableSender(conn: StatefulRedisPubSubConnection[String, String], channel: Channel) extends Sender {
+
+    def apply(msg: String): Unit = if (!stopping) conn.async.publish(channel, msg)
+
+  }
+
+  def makeSender(channel: Channel): Sender = new StoppableSender(redisClient.connectPubSub(), channel)
+
 
   def subscribe(channel: Channel, reader: In.Reader)(handler: Handler): Future[Unit] = {
     val conn = redisClient.connectPubSub()
@@ -47,6 +56,9 @@ final class RemoteSocket(
     }
     subPromise.future
   }
+
+
+
 
 
   Oyunakka.shutdown(shutdown, _.PhaseServiceUnbind, "Stopping the socket redis pool") { () =>
@@ -111,6 +123,14 @@ object RemoteSocket {
       }
 
       def optional(str: String): Option[String] = if (str == "-") None else Some(str)
+    }
+
+
+    object Out {
+
+      def tellSri(sri: Sri, payload: JsValue) =
+        s"tell/sri $sri ${Json stringify payload}"
+
     }
   }
 

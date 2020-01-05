@@ -32,6 +32,10 @@ final class PimpedFuture[A](private val fua: Fu[A]) extends AnyVal {
     Await.result(fua, duration)
 
 
+
+  def withTimeout(duration: FiniteDuration)(implicit ec: EC, system: ActorSystem): Fu[A] =
+    withTimeout(duration, OyunException(s"Future timed out after $duration"))
+
   def withTimeout(
     duration: FiniteDuration,
     error: => Throwable
@@ -42,6 +46,13 @@ final class PimpedFuture[A](private val fua: Fu[A]) extends AnyVal {
     )
   }
 
+
+  def addEffectAnyway(inAnyCase: => Unit)(implicit ec: EC): Fu[A] = {
+    fua onComplete { _ =>
+      inAnyCase
+    }
+    fua
+  }
 
 }
 

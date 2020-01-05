@@ -5,7 +5,6 @@ import play.api.libs.json._
 import oyun.user.LightUserApi
 
 final class ApiJsonView(
-  playerRepo: PlayerRepo,
   lightUserApi: LightUserApi
 )(implicit ctx: scala.concurrent.ExecutionContext) {
 
@@ -35,7 +34,7 @@ final class ApiJsonView(
 
   def playersJson(masa: Masa): Fu[JsObject] =
     for {
-      players <- playerRepo.byMasa(masa.id)
+      players <- fuccess(masa.players)
       fullPlayers <- players.map(JsonView.playerJson(lightUserApi)).sequenceFu
     } yield Json.obj(
       "players" -> fullPlayers

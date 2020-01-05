@@ -1,5 +1,7 @@
 package oyun.common
 
+import scala.concurrent.duration._
+
 case class ApiVersion(value: Int) extends AnyVal {
   def v1 = value == 1
 }
@@ -78,3 +80,7 @@ object Domain {
     def domain = Domain(value)
   }
 }
+
+
+case class Every(value: FiniteDuration)  extends AnyVal
+case class AtMost(value: FiniteDuration) extends AnyVal

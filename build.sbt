@@ -87,7 +87,7 @@ lazy val blog = module("blog",
 )
 
 lazy val lobby = module("lobby",
-  Seq(common, db, user, memo, socket, hub),
+  Seq(common, db, user, memo, masa, socket, hub),
   Seq(lettuce) ++ reactivemongo.bundle
 )
 

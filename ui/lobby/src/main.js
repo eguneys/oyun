@@ -19,6 +19,7 @@ export function start(opts) {
 
   return {
     socketReceive: ctrl.socket.receive,
+    setRedirecting: ctrl.setRedirecting,
     redraw: ctrl.redraw
   };
 

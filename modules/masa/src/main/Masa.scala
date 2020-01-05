@@ -7,18 +7,36 @@ import Masa._
 final case class Masa(
   id: Masa.ID,
   nbSeats: NbSeats,
-  stakes: Stakes
+  stakes: Stakes,
+  seats: Vector[Option[Player]]
 ) {
+
+  import Masa._
+
+  val players = seats.flatten.toList
+
+  def player(side: Side): Option[Player] = seats.lift(side).flatten
+
+  def player(playerId: Player.ID): Option[Player] =
+    players find(_.id == playerId)
+
+  def fullIdOf(side: Side): String = s"$id${side}"
+
+  def pov(s: Side) = Pov(this, s)
+
 }
 
 object Masa {
+
+  type Side = Int
 
   type ID = String
 
   def scheduleAs(sched: Schedule) = Masa(
     id = makeId,
     nbSeats = sched.nbSeats,
-    stakes = sched.stakes
+    stakes = sched.stakes,
+    seats = Vector.fill(sched.nbSeats.nb)(None)
   )
 
   sealed trait NbSeats {

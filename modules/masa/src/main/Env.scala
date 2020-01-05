@@ -26,7 +26,6 @@ final class Env(
 
   lazy val RoundRepo = new RoundRepo()
   lazy val MasaRepo = new MasaRepo()
-  lazy val PlayerRepo = new PlayerRepo()
 
   private lazy val masaScheduler = wire[MasaScheduler]
   masaScheduler.scheduleNow()

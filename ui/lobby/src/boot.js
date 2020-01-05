@@ -33,10 +33,14 @@ export default function(cfg, element) {
             nbRoundSpread(msg.r);
           }, oyunkeyf.socket.pingInterval() / 2);
         },
-        options: {
-          name: 'lobby',
-          onFirstConnect
+        redirect: function(e) {
+          lobby.setRedirecting();
+          window.oyunkeyf.redirect(e);
         }
+      },
+      options: {
+        name: 'lobby',
+        onFirstConnect
       }
     });
 

@@ -3,12 +3,10 @@ package oyun.masa
 import oyun.user.{ User }
 
 private[masa] case class Player(
-  _id: Player.ID, // random
-  masaId: Masa.ID,
+  id: Player.ID, // random
+  side: Masa.Side,
   userId: Option[User.ID]
 ) {
-
-  def id = _id
 
 }
 

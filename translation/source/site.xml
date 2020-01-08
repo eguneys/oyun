@@ -13,10 +13,11 @@
   <string name="players">Players</string>
   <string name="onlinePlayers">Online Players</string>
 
-
   <string name="anonymous">Anonymous</string>
   <string name="lobby">Lobby</string>
   <string name="createAGame">Create a game</string>
+
+  <string name="play">Play</string>
 
   <string name="freeOnlinePoker">Free Online Poker</string>
   <string name="playWithAFriend">Play with a friend</string>

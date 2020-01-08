@@ -14,12 +14,18 @@ GET     /login  controllers.Auth.login
 POST    /login  controllers.Auth.authenticate
 POST    /logout controllers.Auth.logout
 GET     /signup controllers.Auth.signup
-POST     /signup controllers.Auth.signupPost
+POST    /signup controllers.Auth.signupPost
 
 
 # Blog
 
 GET     /blog/:id/:slug controllers.Blog.show(id: String, slug: String, ref: Option[String] ?= None)
+
+
+# Round
+
+GET     /$gameId<\w{8}>:side controllers.Masa.watcher(gameId: String, side: String)
+
 
 # Pages
 

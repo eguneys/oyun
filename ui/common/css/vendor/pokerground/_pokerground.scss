@@ -1,0 +1,231 @@
+.pokerf {
+  
+  position: absolute;
+  width: 100%;
+  height: 100%;
+
+  user-select: none;
+  background-size: cover;
+  cursor: pointer;
+
+}
+
+.bg-poker {
+  position: absolute;
+  width: 100%;
+  height: 100%;
+}
+
+.table {
+  position: absolute;
+}
+
+.bg-table {
+  position: absolute;
+  width: 100%;
+  height: 100%;
+  border-radius: 200px;
+  transform: perspective(40em) rotateX(20deg);
+  box-shadow: 0px 0px 1px 1px black;
+}
+
+.hidden {
+  display: none;
+}
+
+.seat {
+
+  position: absolute;
+  display: flex;
+  flex-flow: column;
+  justify-content: flex-start;
+
+  font-size: 1em;
+  color: white;
+
+  text-align: center;
+  transform: translate(-50%, -50%);
+
+}
+
+.seat img {
+  width: 100%;
+  height: auto;
+  border-radius: 50%;
+  /*border: solid 1px rgba(255, 255, 255, 0.4);*/
+  box-shadow: 0px 0px 1px 1px rgba(255, 255, 255, 0.8);
+}
+
+.seat .stack {
+  margin-top: 0.4em;
+  text-shadow: 1px 1px black;
+}
+
+.seat.empty {
+  border: solid 2px rgba(255, 255, 255, 0.2);
+  border-radius: 50%;
+  background: rgba(255, 255, 255, 0.1)
+}
+
+.seat.empty:active {
+  background: rgba(255, 255, 255, 0.2)
+}
+
+
+.seat .timer {
+  position: absolute;
+  top: -12px;
+  left: -12px;
+  width: calc(100% + 24px);
+}
+
+.timer svg {
+  
+}
+
+.timer circle.bar {
+  transition: stroke 10s ease;
+  stroke: #42a5f5;
+  stroke-width: 2;
+}
+
+.timer circle.bar.emerg {
+  stroke: rgba(217, 30, 24, 1);
+}
+
+.timer circle.border {
+  stroke: black;
+  stroke-width: 1;
+}
+
+.hand {
+  position: absolute;
+}
+
+.hand .card {
+  position: absolute;
+  width: 100%;
+  height: 100%;
+}
+
+.dealer {
+  top: 16%;
+  left: 50%;
+  transform: translateX(-50%);
+}
+
+.dealer .card:nth-child(1) {
+  transform: translateY(20%);
+}
+.dealer .card:nth-child(2) {
+  transform: translateY(10%);
+}
+
+.pbutton {
+  position: absolute;
+  background: white;
+  border-radius: 50%;
+  font-weight: bold;
+  width: 1.6em;
+  height: 1.6em;
+  line-height: 1.6em;
+  text-align: center;
+  vertical-align: middle;
+  box-shadow: 1px 1px 0px 0px black;
+}
+
+.pot {
+  position: absolute;
+  display: flex;
+  align-items: center;
+  width: 8%;
+  transform: translate(-50%);
+}
+
+.pot .header {
+  z-index: 1;
+  border-radius: 50%;
+  padding: 3px 8px;
+  margin-right: -10px;
+  box-shadow: 0px 0px 1px 1px rgba(0, 0, 0, 0.1);
+}
+
+.pot .amount {
+  color: white;
+  background: black;
+  text-align: right;
+  border-radius: 0 10px 10px 0;
+  padding: 1px 10px 1px 20px;
+  box-shadow: 0px 0px 1px 1px rgba(0, 0, 0, 0.1);
+}
+
+.action {
+  display: flex;
+  position: absolute;
+  align-items: center;
+}
+
+.action .header {
+  z-index: 1;
+  border-radius: 50%;
+  width: 1.6em;
+  height: 1.6em;
+  text-align: center;
+  vertical-align: middle;
+  line-height: 1.6em;
+  margin-right: -0.8em;
+  box-shadow: 0px 0px 1px 1px rgba(0, 0, 0, 0.1);
+}
+
+.action .amount {
+  color: white;
+  text-align: right;
+  background: black;
+  border-radius: 0 10px 10px 0;
+  padding: 1px 10px 1px 20px;
+  box-shadow: 0px 0px 1px 1px rgba(0, 0, 0, 0.1);
+}
+
+.middle {
+  position: absolute;
+  transform: translateY(-25%) perspective(40em) rotateX(20deg);
+}
+
+.hole {
+  position: absolute;
+}
+
+.hole.first {
+  transform: translate(-100%, -50%);
+}
+
+.hole.second {
+  transform: translate(2%, -50%);
+}
+
+.hole.first.me {
+  transform: translate(-90%, -30%) rotate(-10deg);
+}
+
+.hole.second.me {
+  transform: translate(-10%, -30%) rotate(10deg);
+}
+
+.middle.glow,
+.hole.glow {
+  box-shadow: 0px 0px 2px 2px rgba(200, 200, 0, 0.8);
+}
+
+.rankmessage {
+  position: absolute;
+  transform: translate(-50%, -50%);
+  color: white;
+  padding: 1em;
+  border-radius: 1em;
+  text-transform: uppercase;
+  text-shadow: 1px 1px rgba(0, 0, 0, 0.8);
+}
+
+.card {
+  background-size: cover;
+}

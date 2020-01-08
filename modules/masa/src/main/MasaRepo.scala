@@ -1,23 +1,36 @@
 package oyun.masa
 
+import java.util.concurrent.ConcurrentHashMap
+import scala.jdk.CollectionConverters._
+
 final class MasaRepo() {
 
-  private var masas = Vector[Masa]()
+  private var masas = new ConcurrentHashMap[Masa.ID, Masa]()
 
   def publicCreated: Fu[List[Masa]] =
-    fuccess(masas.toList)
+    fuccess(masas.values.asScala.toList)
   
 
+  def update(progress: Progress): Funit =
+    saveDiff(progress.origin, progress.masa)
+
+  private def saveDiff(origin: Masa, masa: Masa): Funit = {
+    masas.put(origin.id, masa)
+    funit
+  }
+
   def insert(masa: Masa): Fu[Masa] = {
-    masas = masas.filterNot(_.id == masa.id) :+ masa
+    masas.put(masa.id, masa)
     fuccess(masa)
   }
 
   def delete(masa: Masa): Fu[Unit] = {
-    masas = masas.filterNot(_.id == masa.id)
+    masas.remove(masa.id)
     funit
   }
 
+  def masa = byId _
+
   def byId(masaId: Masa.ID): Fu[Option[Masa]] =
-    fuccess(masas.find(_.id == masaId))
+    fuccess(Option(masas.get(masaId)))
 }

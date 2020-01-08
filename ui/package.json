@@ -4,6 +4,9 @@
   "main": "index.js",
   "license": "MIT",
   "devDependencies": {
+    "@babel/core": "^7.7.7",
+    "@babel/preset-env": "^7.7.7",
+    "babelify": "^10.0.0",
     "gulp": "^4.0.2",
     "gulp-autoprefixer": "^7.0.1",
     "gulp-cached": "^1.1.1",
@@ -15,6 +18,7 @@
     "gulp-sourcemaps": "^2.6.5"
   },
   "dependencies": {
-    "breakpoint-sass": "^2.7.1"
+    "breakpoint-sass": "^2.7.1",
+    "mithril": "^2.0.4"
   }
 }

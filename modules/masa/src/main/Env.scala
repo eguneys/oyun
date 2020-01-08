@@ -16,6 +16,7 @@ private class MasaConfig(
 final class Env(
   appConfig: Configuration,
   db: oyun.db.Db,
+  remoteSocketApi: oyun.socket.RemoteSocket,
   lightUserApi: oyun.user.LightUserApi
 )(
   implicit ec: scala.concurrent.ExecutionContext,
@@ -24,8 +25,7 @@ final class Env(
 
   private val config = appConfig.get[MasaConfig]("masa")(AutoConfig.loader)
 
-  lazy val RoundRepo = new RoundRepo()
-  lazy val MasaRepo = new MasaRepo()
+  lazy val masaRepo = new MasaRepo()
 
   private lazy val masaScheduler = wire[MasaScheduler]
   masaScheduler.scheduleNow()
@@ -35,5 +35,14 @@ final class Env(
   lazy val jsonView = wire[JsonView]
 
   lazy val apiJsonView = wire[ApiJsonView]
+
+  private lazy val proxyDependencies = new MasaProxy.Dependencies(masaRepo)
+  private lazy val roundDependencies = wire[MasaDuct.Dependencies]
+
+  lazy val masaSocket: MasaSocket = wire[MasaSocket]
+
+  lazy val proxyRepo: MasaProxyRepo = wire[MasaProxyRepo]
+
+  private lazy val sitter: Sitter = wire[Sitter]
 
 }

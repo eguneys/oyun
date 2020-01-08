@@ -149,6 +149,14 @@
   width: 100%;
 }
 
+%rectangle {
+  position: relative;
+  width: 100vw;
+  height: 0;
+  padding-bottom: 62.5%;
+  margin: auto;
+}
+
 %video {
   position: relative;
   display: block;

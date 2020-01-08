@@ -14,5 +14,6 @@ final class Env(
 
   lazy val lobbyApi = wire[LobbyApi]
 
+  lazy val masaApi = wire[MasaApi]
 
 }

@@ -8,6 +8,29 @@ final class JsonView(
 
   import JsonView._
 
+  def playerJson(pov: Pov): Fu[JsObject] = 
+    funit map {
+      case _ =>
+        import pov._
+        Json.obj(
+          "masa" -> masaJsonView(masa),
+          "url" -> Json.obj(
+            "socket" -> s"/play/$fullId",
+            "round" -> s"/$fullId"
+          )
+        )
+    }
+
+  def masaJsonView(masa: Masa): JsObject = Json.obj(
+    "nbSeats" -> masa.nbSeats.nb,
+    "stakes" -> masa.stakes.stakesString,
+    "seats" -> masa.seats.map{ _.fold[JsValue](JsNull)(playerView) }
+  )
+
+  def playerView(player: Player): JsObject = Json.obj(
+    "img" -> "https://placehold.it/200"
+  )
+
 }
 
 object JsonView {

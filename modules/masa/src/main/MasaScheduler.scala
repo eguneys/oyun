@@ -1,10 +1,14 @@
 package oyun.masa
 
+import oyun.game.{ Side, NbSeats }
+
 final private class MasaScheduler(
   api: MasaApi,
   masaRepo: MasaRepo) {
 
   import Masa._
+  import Side._
+  import NbSeats._
   import Schedule.Plan
 
   private[masa] def all: List[Plan] = {

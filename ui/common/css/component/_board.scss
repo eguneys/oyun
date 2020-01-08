@@ -1,0 +1,7 @@
+.main-board {
+  @extend %rectangle;
+
+  .pg-wrap {
+    @extend %abs-100;
+  }
+}

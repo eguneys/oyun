@@ -60,6 +60,9 @@ abstract private[controllers] class OyunController(val env: Env)
     fua flatMap { _.fold(notFound(ctx))(a => op(a) map { Ok(_) }) }
 
 
+  protected def OptionFuResult[A](fua: Fu[Option[A]])(op: A => Fu[Result])(implicit ctx: Context) =
+    fua flatMap { _.fold(notFound(ctx))(a => op(a)) }
+
   def notFound(implicit ctx: Context): Fu[Result] = negotiate(
     html = fuccess(renderNotFound(ctx)),
     api = _ => notFoundJson("Resource not found")

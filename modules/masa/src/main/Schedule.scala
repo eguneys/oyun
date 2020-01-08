@@ -1,10 +1,10 @@
 package oyun.masa
 
-import Masa._
+import oyun.game.{ NbSeats }
 
 case class Schedule(
   nbSeats: NbSeats,
-  stakes: Stakes
+  stakes: Masa.Stakes
 ) {
 
   def plan = Schedule.Plan(this)

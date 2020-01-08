@@ -40,6 +40,8 @@ trait AssetHelper { self: I18nHelper =>
     src := assetUrl(path))
 
 
+  def masaTag = jsAt(s"compiled/oyunkeyf.masa${isProd ?? (".min")}.js", defer = true)
+
   def embedJsUnsafe(js: String): Frag = raw {
     s"""<script>$js</script>"""
   }

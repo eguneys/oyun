@@ -1,6 +1,8 @@
 package oyun.masa
 
-case class Pov(masa: Masa, side: Masa.Side) {
+import oyun.game.{ Game, Side }
+
+case class Pov(masa: Masa, side: Side, game: Option[Game] = None) {
 
   def player = masa player side
 
@@ -9,7 +11,8 @@ case class Pov(masa: Masa, side: Masa.Side) {
   def fullId = masa fullIdOf side
 
   def masaId = masa.id
-  
+ 
+  def withGame(game: Game) = copy(game = Some(game)) 
 }
 
 object Pov {

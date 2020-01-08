@@ -45,6 +45,7 @@ final class OyunComponents(ctx: ApplicationLoader.Context)
   lazy val page: Page = wire[Page]
   lazy val main: Main = wire[Main]
   lazy val blog: Blog = wire[Blog]
+  lazy val masa: Masa = wire[Masa]
   lazy val prismic: Prismic = wire[Prismic]
 
   val router: Router = {

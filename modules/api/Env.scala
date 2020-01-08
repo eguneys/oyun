@@ -9,7 +9,8 @@ import oyun.common.config._
 final class Env(
   appConfig: Configuration,
   net: NetConfig,
-  masaEnv: oyun.masa.Env
+  masaEnv: oyun.masa.Env,
+  gameEnv: oyun.game.Env
 )(implicit ec: scala.concurrent.ExecutionContext, system: ActorSystem) {
 
   lazy val lobbyApi = wire[LobbyApi]

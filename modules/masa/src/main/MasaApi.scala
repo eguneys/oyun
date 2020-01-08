@@ -2,8 +2,10 @@ package oyun.masa
 
 import akka.actor.{ ActorSystem }
 
+import oyun.game.{ Masa }
+
 final class MasaApi(
-  masaRepo: MasaRepo
+  masaRepo: oyun.game.MasaRepo
 )(
   implicit ec: scala.concurrent.ExecutionContext,
   system: ActorSystem) {
@@ -13,7 +15,7 @@ final class MasaApi(
   }
 
 
-  def fetchVisibleMasas: Fu[Masas] =
+  def fetchVisibleMasas: Fu[List[Masa]] =
     masaRepo.publicCreated map {
       case created =>
         created

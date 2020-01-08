@@ -4,8 +4,7 @@ package masa
 import oyun.api.Context
 import oyun.app.templating.Environment._
 import oyun.app.ui.ScalatagsTemplate._
-import oyun.masa.{ Pov }
-import oyun.game.Game
+import oyun.game.{ Game, Pov }
 
 import controllers.routes
 

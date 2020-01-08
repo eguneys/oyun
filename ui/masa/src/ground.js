@@ -6,16 +6,13 @@ export function makeConfig(ctrl) {
   
   console.log(data);
 
-
-  const masa = data.masa;
-
   return {
-    fen: masa.fen,
-    clock: masa.clock,
-    seatIndexes: masa.seatIndexes,
-    me: masa.me,
-    seats: masa.seats,
-    status: masa.status,
+    fen: data.fen,
+    clock: data.clock,
+    seatIndexes: data.seatIndexes,
+    me: data.me,
+    seats: data.seats,
+    status: data.status,
     events: {
       sit: hooks.onSit,
       move: hooks.onMove,

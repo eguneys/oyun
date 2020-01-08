@@ -3,6 +3,7 @@ package oyun.masa
 import play.api.libs.json._
 
 import oyun.user.LightUserApi
+import oyun.game.{ Masa }
 
 final class ApiJsonView(
   lightUserApi: LightUserApi
@@ -10,7 +11,7 @@ final class ApiJsonView(
 
   import JsonView._
 
-  def apply(masas: Masas): Fu[JsObject] =
+  def apply(masas: List[Masa]): Fu[JsObject] =
     for {
       created <- masas.collect(visibleJson).sequenceFu
     } yield Json.obj(

@@ -3,31 +3,36 @@ package oyun.masa
 import play.api.libs.json._
 import scala.concurrent.ExecutionContext
 
+import oyun.game.{ Masa, Pov, Player => GamePlayer }
+import oyun.user.{ User, UserRepo }
+
 final class JsonView(
+  userRepo: UserRepo
 )(implicit ec: ExecutionContext) {
 
   import JsonView._
 
   def playerJson(pov: Pov): Fu[JsObject] = 
-    funit map {
-      case _ =>
+    (pov.masa.seats.map{ _ ?? 
+      { p => userRepo.byId(p.userId) }
+    }.sequenceFu) map {
+      case playerUsers =>
         import pov._
         Json.obj(
-          "masa" -> masaJsonView(masa),
+          "nbSeats" -> masa.nbSeats.nb,
+          "stakes" -> masa.stakes.stakesString,
+          "seats" -> (masa.seats zip playerUsers).map{
+            case Some(p) ~ Some(u) => playerView(p, u)
+            case _ => JsNull
+          },
           "url" -> Json.obj(
-            "socket" -> s"/play/$fullId",
-            "round" -> s"/$fullId"
+            "socket" -> s"/play/$masaId",
+            "round" -> s"/$masaId"
           )
         )
     }
 
-  def masaJsonView(masa: Masa): JsObject = Json.obj(
-    "nbSeats" -> masa.nbSeats.nb,
-    "stakes" -> masa.stakes.stakesString,
-    "seats" -> masa.seats.map{ _.fold[JsValue](JsNull)(playerView) }
-  )
-
-  def playerView(player: Player): JsObject = Json.obj(
+  def playerView(player: GamePlayer, user: User): JsObject = Json.obj(
     "img" -> "https://placehold.it/200"
   )
 
@@ -37,13 +42,12 @@ object JsonView {
 
   def playerJson(
     lightUserApi: oyun.user.LightUserApi
-  )(player: Player)(implicit ec: ExecutionContext): Fu[JsObject] = 
+  )(player: GamePlayer)(implicit ec: ExecutionContext): Fu[JsObject] = 
     for {
-      light <- player.userId ?? lightUserApi.async
+      light <- lightUserApi.async(player.userId)
     } yield Json
       .obj("id" -> player.id)
       .add("light" -> light)
-
 
   implicit val stakesWrites: OWrites[Masa.Stakes] = OWrites { stakes =>
     Json.obj(

@@ -1,8 +1,7 @@
-package oyun.masa
+package oyun.game
 
 import ornicar.scalalib.Random
 
-import oyun.game.{ Game, Side, NbSeats }
 import oyun.user.User
 
 final case class Masa(
@@ -21,17 +20,27 @@ final case class Masa(
   def player(userId: User.ID): Option[Player] =
     players find(_.userId == userId)
 
-  def fullIdOf(side: Side): String = s"$id${side.index}"
-
   def pov(s: Side) = Pov(this, s)
 
-  def empty(s: Side) = player(s).isDefined
+  def valid(s: Side) = nbSeats.valid(s)
 
-  def sitable(userId: User.ID) = !player(userId).isDefined
+  def empty(s: Side) = !player(s).isDefined
 
-  def sit(userId: User.ID, side: Side) = {
+  def sitting(userId: User.ID) = player(userId).isDefined
 
+  def sitable(userId: User.ID, side: Side) = 
+    valid(side) && empty(side) && !sitting(userId)
+
+  def sit(user: User, side: Side): Progress = {
+    val p = Player(side, user)
+    val updated = updatePlayer(side, Some(p))
+    Progress(this, updated) ++ List(
+      BuyIn(side, p)
+    )
   }
+
+  private def updatePlayer(side: Side, p: Option[Player]) = 
+    copy(seats = seats.updated(side.index, p))
 
 }
 

@@ -1,5 +1,7 @@
 package oyun.game
 
+import play.api.libs.json._
+
 sealed trait Side {
   val index: Int
 }
@@ -54,6 +56,11 @@ object Side {
   def apply(str: String): Option[Side] = allByForsyth get str
 
   def orDefault(str: String): Side = Side(str) | ZeroI
+
+  implicit val sideWrites = new Writes[Side] {
+    def writes(side: Side) = JsString(side.index.toString)
+  }
+
 }
 
 abstract class NbSeats {

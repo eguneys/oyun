@@ -1,10 +1,10 @@
 package oyun.masa
 
-import oyun.game.{ Side, NbSeats }
+import oyun.game.{ Masa, Schedule, Side, NbSeats }
 
 final private class MasaScheduler(
   api: MasaApi,
-  masaRepo: MasaRepo) {
+  masaRepo: oyun.game.MasaRepo) {
 
   import Masa._
   import Side._

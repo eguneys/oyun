@@ -2,7 +2,7 @@ package oyun.masa
 
 import actorApi._, masa._
 import oyun.hub.Duct
-import oyun.game.{ Side }
+import oyun.game.{ Masa, Side }
 import oyun.socket.RemoteSocket.{ Protocol => RP, _ }
 
 final private[masa] class MasaDuct(
@@ -53,7 +53,7 @@ object MasaDuct {
   case object WsBoot
 
   private[masa] class Dependencies(
-    val masaRepo: MasaRepo,
+    val masaRepo: oyun.game.MasaRepo,
     val sitter: Sitter
   )
 

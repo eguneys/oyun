@@ -8,12 +8,12 @@ import actorApi._
 import oyun.common.{ AtMost, Every }
 import oyun.hub.Trouper
 import oyun.socket.Socket.{ Sri }
-import oyun.masa.Masa
+import oyun.game.Masa
 import oyun.user.User
 
 final private class LobbyTrouper(
   biter: Biter,
-  masaRepo: oyun.masa.MasaRepo
+  masaRepo: oyun.game.MasaRepo
 )(implicit ec: scala.concurrent.ExecutionContext) extends Trouper {
 
   import LobbyTrouper._

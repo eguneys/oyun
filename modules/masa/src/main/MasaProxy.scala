@@ -1,6 +1,7 @@
 package oyun.masa
 
 import scala.util.Success
+import oyun.game.{ Masa, Progress }
 
 final private class MasaProxy(
   id: Masa.ID,
@@ -39,7 +40,7 @@ final private class MasaProxy(
 private object MasaProxy {
 
   class Dependencies(
-    val masaRepo: MasaRepo
+    val masaRepo: oyun.game.MasaRepo
   )
 
 }

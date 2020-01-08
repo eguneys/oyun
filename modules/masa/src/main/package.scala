@@ -7,9 +7,6 @@ package object masa extends PackageObject {
   private[masa] val logger = oyun.log("masa")
 
   private[masa] type Events = List[Event]
-
-  private[masa] type Masas = List[Masa]
-  
 }
 
 package masa {

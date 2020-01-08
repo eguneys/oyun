@@ -6,7 +6,7 @@ import oyun.i18n.{ I18nKeys => trans }
 
 object jsI18n {
 
-  def apply(g: Option[oyun.game.Game])(implicit ctx: Context) = i18nJsObject {
+  def apply()(implicit ctx: Context) = i18nJsObject {
     baseTranslations
   }
 

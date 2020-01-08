@@ -7,7 +7,7 @@ import oyun.api.Context
 import oyun.app.templating.Environment._
 import oyun.app.ui.ScalatagsTemplate._
 import oyun.common.String.html.safeJsonValue
-import oyun.masa.Pov
+import oyun.game.Pov
 
 object player {
 
@@ -22,7 +22,7 @@ object player {
 OyunkeyfMasa.boot(${safeJsonValue(
 Json.obj(
 "data" -> data,
-"i18n" -> jsI18n(pov.game),
+"i18n" -> jsI18n(),
 "userId" -> ctx.userId
 )
 )})

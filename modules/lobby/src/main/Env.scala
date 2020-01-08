@@ -11,7 +11,7 @@ final class Env(
   appConfig: Configuration,
   db: oyun.db.Db,
   userRepo: oyun.user.UserRepo,
-  masaRepo: oyun.masa.MasaRepo,
+  masaRepo: oyun.game.MasaRepo,
   remoteSocketApi: oyun.socket.RemoteSocket
 )(implicit ec: scala.concurrent.ExecutionContext,
   system: akka.actor.ActorSystem) {

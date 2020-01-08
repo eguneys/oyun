@@ -2,11 +2,10 @@ package oyun.lobby
 
 import actorApi.{ JoinMasa }
 import oyun.socket.Socket.{ Sri }
-import oyun.masa.Masa
-import oyun.game.Side
+import oyun.game.{ Masa, Side }
 
 final private class Biter(
-  masaRepo: oyun.masa.MasaRepo
+  masaRepo: oyun.game.MasaRepo
 )(implicit ec: scala.concurrent.ExecutionContext) {
 
   def apply(masa: Masa, sri: Sri, lobbyUserOption: Option[LobbyUser]): Fu[JoinMasa] =

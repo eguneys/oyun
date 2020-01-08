@@ -2,6 +2,8 @@ package oyun.masa
 
 import play.api.libs.json._
 
+import oyun.game.Pov
+
 object AnonCookie {
 
   val name = "rk2"

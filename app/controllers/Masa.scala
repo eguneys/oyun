@@ -5,8 +5,7 @@ import play.api.mvc._
 
 import oyun.api.Context
 import oyun.app._
-import oyun.game.{ Side }
-import oyun.masa.{ Pov }
+import oyun.game.{ Side, Pov }
 import views._
 
 
@@ -27,13 +26,13 @@ final class Masa(
       api = _ => ???
     )
 
-  def watcher(masaId: String, side: String) = Open { implicit ctx =>
-    OptionFuResult(proxyPov(masaId, side)) { pov =>
+  def watcher(masaId: String) = Open { implicit ctx =>
+    OptionFuResult(proxyPov(masaId)) { pov =>
       renderPov(pov)
     }
   }
 
-  private def proxyPov(masaId: String, side: String): Fu[Option[Pov]] = 
-    env.masa.proxyRepo.pov(masaId, Side.orDefault(side))
+  private def proxyPov(masaId: String): Fu[Option[Pov]] = 
+    env.masa.proxyRepo.pov(masaId, Side.ZeroI)
   
 }

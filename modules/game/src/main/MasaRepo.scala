@@ -1,4 +1,4 @@
-package oyun.masa
+package oyun.game
 
 import java.util.concurrent.ConcurrentHashMap
 import scala.jdk.CollectionConverters._

@@ -3,7 +3,7 @@ function stakesOrder(a, b) {
 }
 
 function playersOrder(a, b) {
-  return a.players.length < b.players.length ? -1 : 1;
+  return a.players.length > b.players.length ? -1 : 1;
 }
 
 export function sort(ctrl, masas) {

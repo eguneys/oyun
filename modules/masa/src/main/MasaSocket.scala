@@ -6,8 +6,8 @@ import scala.concurrent.ExecutionContext
 
 import actorApi._
 import actorApi.masa._
-import oyun.game.{ Side }
-import oyun.masa.Masa.{ FullId }
+import oyun.game.{ Masa, Side }
+import oyun.game.Masa.{ FullId }
 import oyun.socket.RemoteSocket.{ Protocol => P, _ }
 import oyun.hub.DuctConcMap
 

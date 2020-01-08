@@ -8,3 +8,18 @@ sealed trait Event {
   def only: Option[Side] = None
   def owner: Boolean = false
 }
+
+case class BuyIn(side: Side, player: Player) extends Event {
+
+  def typ = "buyin"
+
+  def data = Json.obj(
+    "side" -> side,
+    "player" -> Json.obj(
+      "id" -> player.id,
+      "user"  -> player.userId,
+      "status" -> player.status.forsyth
+    )
+  )
+
+}

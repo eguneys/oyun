@@ -24,7 +24,7 @@ GET     /blog/:id/:slug controllers.Blog.show(id: String, slug: String, ref: Opt
 
 # Round
 
-GET     /$gameId<\w{8}>:side controllers.Masa.watcher(gameId: String, side: String)
+GET     /$masaId<\w{8}> controllers.Masa.watcher(masaId: String)
 
 
 # Pages

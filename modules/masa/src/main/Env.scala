@@ -17,15 +17,15 @@ final class Env(
   appConfig: Configuration,
   db: oyun.db.Db,
   remoteSocketApi: oyun.socket.RemoteSocket,
-  lightUserApi: oyun.user.LightUserApi
+  lightUserApi: oyun.user.LightUserApi,
+  userRepo: oyun.user.UserRepo,
+  masaRepo: oyun.game.MasaRepo
 )(
   implicit ec: scala.concurrent.ExecutionContext,
   system: ActorSystem) {
 
 
   private val config = appConfig.get[MasaConfig]("masa")(AutoConfig.loader)
-
-  lazy val masaRepo = new MasaRepo()
 
   private lazy val masaScheduler = wire[MasaScheduler]
   masaScheduler.scheduleNow()

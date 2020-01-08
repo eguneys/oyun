@@ -1,6 +1,4 @@
-package oyun.masa
-
-import oyun.game.{ NbSeats }
+package oyun.game
 
 case class Schedule(
   nbSeats: NbSeats,

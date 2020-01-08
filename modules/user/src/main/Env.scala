@@ -23,10 +23,10 @@ final class Env(
 
   private val config = appConfig.get[UserConfig]("user")(AutoConfig.loader)
 
+  val repo = new UserRepo(db(config.collectionUser))
+
   val lightUserApi: LightUserApi = wire[LightUserApi]
   val lightUser = lightUserApi.async
-
-  val repo = new UserRepo(db(config.collectionUser))
 
   private lazy val passHasher = new PasswordHasher(
     secret = config.passwordBPassSecret,

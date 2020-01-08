@@ -1,6 +1,6 @@
 package oyun.masa
 
-import oyun.game.Side
+import oyun.game.{ Pov, Masa, Side }
 
 final class MasaProxyRepo(
   masaSocket: MasaSocket

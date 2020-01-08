@@ -1,8 +1,8 @@
 package oyun.api
 
 import play.api.libs.json._
-import oyun.game.Game
-import oyun.masa.{ Pov, JsonView }
+import oyun.game.{ Pov, Game }
+import oyun.masa.{ JsonView }
 
 final private[api] class MasaApi(
   jsonView: JsonView

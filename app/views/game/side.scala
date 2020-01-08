@@ -9,7 +9,7 @@ import controllers.routes
 
 object side {
 
-  def apply(pov: oyun.masa.Pov
+  def apply(pov: oyun.game.Pov
   )(implicit ctx: Context): Option[Frag] = frag(
   ).some
 

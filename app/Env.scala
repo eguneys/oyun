@@ -63,6 +63,7 @@ final class EnvBoot(
   lazy val blog: oyun.blog.Env         = wire[oyun.blog.Env]
   lazy val socket: oyun.socket.Env     = wire[oyun.socket.Env]
   lazy val lobby: oyun.lobby.Env       = wire[oyun.lobby.Env]
+  lazy val game: oyun.game.Env         = wire[oyun.game.Env]
   lazy val masa: oyun.masa.Env         = wire[oyun.masa.Env]
   lazy val round: oyun.round.Env       = wire[oyun.round.Env]
   lazy val api: oyun.api.Env           = wire[oyun.api.Env]

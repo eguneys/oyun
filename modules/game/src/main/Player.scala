@@ -1,15 +1,20 @@
 package oyun.game
 
+import play.api.libs.json._
+
 import ornicar.scalalib.Random
 
-import oyun.user.{ User }
+import oyun.user.{ User, Avatar }
 
 case class Player(
   id: Player.ID, // random
   side: Side,
   userId: User.ID,
+  avatar: Avatar,
   status: Player.Status
 ) {
+
+
 
 }
 
@@ -41,7 +46,16 @@ object Player {
     new Player(id = makePlayerId,
       side = side,
       userId = user.id,
+      avatar = user.avatar,
       status = status)
 
   def makePlayerId = Random nextString 4
+
+  implicit val statusWriter: Writes[Status] = new Writes[Status] {
+    def writes(status: Status) = JsString(status.forsyth)
+  }
+
+  implicit val avatarWriter: Writes[Avatar] = new Writes[Avatar] {
+    def writes(avatar: Avatar) = JsString(avatar.link)
+  }
 }

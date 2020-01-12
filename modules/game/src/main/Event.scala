@@ -2,6 +2,8 @@ package oyun.game
 
 import play.api.libs.json._
 
+import Player._
+
 sealed trait Event {
   def typ: String
   def data: JsValue
@@ -18,7 +20,8 @@ case class BuyIn(side: Side, player: Player) extends Event {
     "player" -> Json.obj(
       "id" -> player.id,
       "user"  -> player.userId,
-      "status" -> player.status.forsyth
+      "avatar" -> player.avatar,
+      "status" -> player.status
     )
   )
 
@@ -28,6 +31,7 @@ case class Me(side: Side, player: Player) extends Event {
   def typ = "me"
 
   def data = Json.obj(
+    "side" -> side,
     "status" -> player.status.forsyth
   )
 

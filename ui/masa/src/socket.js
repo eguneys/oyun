@@ -1,3 +1,5 @@
+import throttle from 'common/throttle';
+
 export function make(send, ctrl) {
 
   function reload(o, isRetry) {
@@ -12,6 +14,10 @@ export function make(send, ctrl) {
   return {
     send,
     handlers,
+    sitoutNextHand: throttle(300, (value) => {
+      console.log(value);
+      send('sitoutNext', value);
+    }),
     sendLoading(typ, data) {
       ctrl.setLoading(true);
       send(typ, data);

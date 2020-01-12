@@ -6,9 +6,11 @@ import scala.concurrent.ExecutionContext
 
 import actorApi._
 import actorApi.masa._
-import oyun.game.{ Masa, Side }
+import oyun.game.{ Masa, Side, Event }
 import oyun.game.Masa.{ FullId }
+import oyun.room.RoomSocket.{ Protocol => RP, _ }
 import oyun.socket.RemoteSocket.{ Protocol => P, _ }
+import oyun.socket.Socket.SocketVersion
 import oyun.hub.DuctConcMap
 
 final class MasaSocket(
@@ -39,7 +41,10 @@ final class MasaSocket(
 
   private lazy val masaHandler: Handler = {
     case Protocol.In.Sit(id, side) =>
-      tellMasa(id.masaId, Sit(id.userId, side))
+      tellMasa(id.masaId, Buyin(id.userId, side))
+    case P.In.WsBoot =>
+      logger.warn("Remote socket boot")
+      masas.tellAll(MasaDuct.WsBoot)
   }
 
   private lazy val send: String => Unit = remoteSocketApi.makeSender("m-out").apply _
@@ -67,11 +72,23 @@ object MasaSocket {
                   Sit(FullId(fullId), _)
                 }
             }
+          case _ => RP.In.reader(raw)
         }
       }
     }
 
     object Out {
+
+      def masaPlayerStore(masaId: Masa.Id, value: String) =
+        s"m/players $masaId $value"
+
+      def tellVersion(roomId: RoomId, version: SocketVersion, e: Event) = {
+        val flags = new StringBuilder(2)
+
+        val only = e.only.map(_.index) getOrElse "-"
+
+        s"m/ver $roomId $version $flags ${only} ${e.typ} ${e.data}"
+      }
 
     }
 

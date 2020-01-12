@@ -3,7 +3,9 @@ package oyun.masa
 import actorApi._, masa._
 import oyun.hub.Duct
 import oyun.game.{ Masa, Side }
-import oyun.socket.RemoteSocket.{ Protocol => RP, _ }
+import oyun.room.RoomSocket.{ Protocol => RP, _ }
+import oyun.socket.RemoteSocket.{ Protocol => _, _ }
+import oyun.socket.Socket.{ makeMessage, SocketVersion }
 
 final private[masa] class MasaDuct(
   dependencies: MasaDuct.Dependencies,
@@ -11,20 +13,33 @@ final private[masa] class MasaDuct(
   socketSend: String => Unit
 )(implicit ec: scala.concurrent.ExecutionContext, proxy: MasaProxy) extends Duct {
 
+  import MasaSocket.Protocol
   import MasaDuct._
   import dependencies._
+
+  private var version = SocketVersion(0)
 
   def getMasa: Fu[Option[Masa]] = proxy.masa
 
   val process: Duct.ReceiveAsync = {
 
-    case Sit(userId, side) =>
+    case GetSocketStatus(promise) =>
+      fuccess {
+        promise success SocketStatus(
+          version = version
+        )
+      }
+    case Buyin(userId, side) =>
       handle { masa =>
-        sitter.sit(masa, userId, side)
+        sitter.buyin(masa, userId, side)
       }
 
     case WsBoot =>
-      funit
+      proxy.withMasa { m =>
+        val uids = m.seats.map { _ ?? { _.userId } } mkString ","
+        socketSend(Protocol.Out.masaPlayerStore(Masa.Id(masaId), uids))
+        funit
+      }
 
   }
   
@@ -36,7 +51,15 @@ final private[masa] class MasaDuct(
   private def handleAndPublish(events: Fu[Events]): Funit =
     events dmap publish recover errorHandler("handle")
 
-  private def publish[A](events: Events): Unit = ()
+  private def publish[A](events: Events): Unit =
+    if (events.nonEmpty) {
+      events.map { e =>
+        version = version.inc
+        socketSend {
+          Protocol.Out.tellVersion(roomId, version, e)
+        }
+      }
+    }
 
   private def errorHandler(name: String): PartialFunction[Throwable, Unit] = {
     case e: ClientError =>
@@ -46,6 +69,7 @@ final private[masa] class MasaDuct(
   }
 
 
+  def roomId = RoomId(masaId)
 }
 
 object MasaDuct {

@@ -14,6 +14,10 @@ export default function MasaController(opts, redraw) {
     this.pokerground = pg;
   };
 
+  const onSitoutNextHand = (value) => {
+    this.socket.sitoutNextHand(value);
+  };
+
 
   const onSit = (seatIndex) => {
     const socketOpts = {
@@ -33,6 +37,7 @@ export default function MasaController(opts, redraw) {
   };
 
   this.makePgHooks = () => ({
+    onSitoutNextHand: onSitoutNextHand,
     onSit: onSit,
     onMove: onMove,
     onFlag: onFlag

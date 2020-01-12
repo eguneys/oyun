@@ -7,11 +7,11 @@ final private class Sitter(
   userRepo: oyun.user.UserRepo
 )(implicit ec: scala.concurrent.ExecutionContext) {
 
-  def sit(masa: Masa, userId: User.ID, side: Side)
+  def buyin(masa: Masa, userId: User.ID, side: Side)
     (implicit proxy: MasaProxy): Fu[Events] =
     if (masa.sitable(userId, side)) {
       userRepo byId userId flatMap { _ ?? { user =>
-        val prog = masa.sit(user, side)
+        val prog = masa.buyin(user, side)
         proxy.save(prog) >>
         fuccess(prog.events)
       } }

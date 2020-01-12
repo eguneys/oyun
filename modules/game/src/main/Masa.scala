@@ -31,11 +31,16 @@ final case class Masa(
   def sitable(userId: User.ID, side: Side) = 
     valid(side) && empty(side) && !sitting(userId)
 
-  def sit(user: User, side: Side): Progress = {
-    val p = Player(side, user)
+  def buyin(user: User, side: Side): Progress = {
+    val status = if (players.length == 0)
+      Player.WaitOthers
+    else
+      Player.WaitNextHand
+    val p = Player(side, user, status)
     val updated = updatePlayer(side, Some(p))
     Progress(this, updated) ++ List(
-      BuyIn(side, p)
+      BuyIn(side, p),
+      Me(side, p)
     )
   }
 

@@ -23,8 +23,8 @@ final private class MasaScheduler(
       Mini10 -> 3
     ) flatMap {
       case (stakes, nb) =>
-        List.fill(nb)(Schedule(Five, stakes).plan) ++
-        List.fill(nb - 1)(Schedule(Nine, stakes).plan)
+        List.fill(nb)(Schedule(Five, stakes).plan)
+        // List.fill(nb - 1)(Schedule(Nine, stakes).plan)
     }
   }
 

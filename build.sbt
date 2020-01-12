@@ -93,7 +93,7 @@ lazy val lobby = module("lobby",
 
 
 lazy val masa = module("masa",
-  Seq(common, db, user, game, memo, socket, hub),
+  Seq(common, db, user, game, memo, room, socket, hub),
   Seq(lettuce) ++ reactivemongo.bundle
 )
 
@@ -105,6 +105,11 @@ lazy val round = module("round",
 lazy val game = module("game",
   Seq(common, db, user, memo, socket, hub),
   Seq() ++ reactivemongo.bundle
+)
+
+lazy val room = module("room",
+  Seq(common, socket),
+  Seq(lettuce) ++ reactivemongo.bundle
 )
 
 lazy val memo = module("memo",

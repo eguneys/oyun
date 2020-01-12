@@ -23,3 +23,13 @@ case class BuyIn(side: Side, player: Player) extends Event {
   )
 
 }
+
+case class Me(side: Side, player: Player) extends Event {
+  def typ = "me"
+
+  def data = Json.obj(
+    "status" -> player.status.forsyth
+  )
+
+  override def only = Some(side)
+}

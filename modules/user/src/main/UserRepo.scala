@@ -32,7 +32,10 @@ final class UserRepo(
     email: EmailAddress): Fu[Option[User]] =
     !nameExists(username) flatMap {
       _ ?? {
-        val doc = newUser(username, passwordHash, email) ++
+        val doc = newUser(username,
+          Avatar.pickRandom,
+          passwordHash,
+          email) ++
         ("len" -> BSONInteger(username.size))
         coll.insert.one(doc) >> named(normalize(username))
       }
@@ -46,6 +49,7 @@ final class UserRepo(
 
   private def newUser(
     username: String,
+    avatar: Avatar,
     passwordHash: HashedPassword,
     email: EmailAddress) = {
     val normalizedEmail = email.normalize
@@ -53,6 +57,7 @@ final class UserRepo(
     $doc(
       F.id -> normalize(username),
       F.username -> username,
+      F.avatar -> avatar.value,
       F.email -> normalizedEmail,
       F.bpass -> passwordHash,
       F.enabled -> true,

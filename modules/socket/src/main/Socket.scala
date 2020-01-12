@@ -6,6 +6,11 @@ object Socket extends Socket {
 
   case class Sri(value: String) extends AnyVal with StringValue
   
+  case class SocketVersion(value: Int) extends AnyVal with IntValue with Ordered[SocketVersion] {
+    def compare(other: SocketVersion) = Integer.compare(value, other.value)
+    def inc = SocketVersion(value + 1)
+  }
+
 }
 
 private[socket] trait Socket {

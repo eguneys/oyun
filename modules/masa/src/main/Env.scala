@@ -5,7 +5,9 @@ import com.softwaremill.macwire._
 import io.methvin.play.autoconfig._
 import play.api.Configuration
 
+import actorApi. { GetSocketStatus, SocketStatus }
 import oyun.common.config._
+import oyun.game.{ Masa }
 import oyun.user.User
 
 private class MasaConfig(
@@ -29,6 +31,8 @@ final class Env(
 
   private lazy val masaScheduler = wire[MasaScheduler]
   masaScheduler.scheduleNow()
+
+  lazy val getSocketStatus = (masa: Masa) => masaSocket.masas.ask[SocketStatus](masa.id)(GetSocketStatus)
 
   lazy val api: MasaApi = wire[MasaApi]
 

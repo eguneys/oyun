@@ -22,6 +22,9 @@ object Player {
   case object WaitNextHand extends Status {
     val forsyth = "WN"
   }
+  case object WaitOthers extends Status {
+    val forsyth = "WO"
+  }
   case object Involved extends Status {
     val forsyth = "I"
   }
@@ -33,11 +36,12 @@ object Player {
 
   def apply(
     side: Side,
-    user: User) =
+    user: User,
+    status: Status) =
     new Player(id = makePlayerId,
       side = side,
       userId = user.id,
-      status = WaitNextHand)
+      status = status)
 
   def makePlayerId = Random nextString 4
 }

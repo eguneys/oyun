@@ -7,7 +7,7 @@ export default function(opts) {
   let masa;
   oy.socket = oy.StrongSocket(
     data.url.socket,
-    '1.0', {
+    data.player.version, {
       options: { name: 'masa' },
       params: {},
       receive(t, d) { masa.socketReceive(t, d); },

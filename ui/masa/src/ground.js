@@ -14,6 +14,7 @@ export function makeConfig(ctrl) {
     seats: data.seats,
     status: data.status,
     events: {
+      sitoutNextHand: hooks.onSitoutNextHand,
       sit: hooks.onSit,
       move: hooks.onMove,
       flag: hooks.onFlag

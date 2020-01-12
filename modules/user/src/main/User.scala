@@ -5,6 +5,7 @@ import oyun.common.{ EmailAddress, LightUser, NormalizedEmailAddress }
 case class User(
   id: String,
   username: String,
+  avatar: Avatar,
   enabled: Boolean,
   lang: Option[String]
 ) {
@@ -52,6 +53,7 @@ object User {
 
     val id = "_id"
     val username = "username"
+    val avatar = "avatar"
     val enabled = "enabled"
     val createdAt = "createdAt"
     val seenAt = "seenAt"
@@ -72,6 +74,7 @@ object User {
     def reads(r: BSON.Reader): User = User(
       id = r str id,
       username = r str username,
+      avatar = Avatar(r str avatar),
       enabled = r bool enabled,
       lang = r strO lang
     )
@@ -79,6 +82,7 @@ object User {
     def writes(w: BSON.Writer, o: User) = BSONDocument(
       id -> o.id,
       username -> o.username,
+      avatar -> o.avatar.value,
       enabled -> o.enabled,
       lang -> o.lang
     )

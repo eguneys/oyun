@@ -1,0 +1,9 @@
+{
+  "name": "masa",
+  "version": "1.0.0",
+  "main": "index.js",
+  "license": "MIT",
+  "dependencies": {
+    "mithril": "^2.0.4"
+  }
+}

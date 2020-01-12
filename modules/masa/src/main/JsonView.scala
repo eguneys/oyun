@@ -5,35 +5,43 @@ import scala.concurrent.ExecutionContext
 
 import oyun.game.{ Masa, Pov, Player => GamePlayer }
 import oyun.user.{ User, UserRepo }
+import actorApi.SocketStatus
 
 final class JsonView(
-  userRepo: UserRepo
+  userRepo: UserRepo,
+  getSocketStatus: Masa => Fu[SocketStatus]
 )(implicit ec: ExecutionContext) {
 
   import JsonView._
 
   def playerJson(pov: Pov): Fu[JsObject] = 
-    (pov.masa.seats.map{ _ ?? 
-      { p => userRepo.byId(p.userId) }
-    }.sequenceFu) map {
-      case playerUsers =>
-        import pov._
-        Json.obj(
-          "nbSeats" -> masa.nbSeats.nb,
-          "stakes" -> masa.stakes.stakesString,
-          "seats" -> (masa.seats zip playerUsers).map{
-            case Some(p) ~ Some(u) => playerView(p, u)
-            case _ => JsNull
-          },
-          "url" -> Json.obj(
-            "socket" -> s"/play/$masaId",
-            "round" -> s"/$masaId"
+    getSocketStatus(pov.masa) zip
+      (pov.masa.seats.map{ _ ??
+        { p => userRepo.byId(p.userId) }
+      }.sequenceFu) map {
+        case socket ~ playerUsers =>
+          import pov._
+          Json.obj(
+            "nbSeats" -> masa.nbSeats.nb,
+            "stakes" -> masa.stakes.stakesString,
+            "seats" -> (masa.seats zip playerUsers).map{
+              case Some(p) ~ Some(u) => playerView(p, u)
+              case _ => JsNull
+            },
+            "player" -> {
+              Json.obj(
+                "version" -> socket.version.value
+              )
+            },
+            "url" -> Json.obj(
+              "socket" -> s"/play/$masaId",
+              "round" -> s"/$masaId"
+            )
           )
-        )
-    }
+      }
 
   def playerView(player: GamePlayer, user: User): JsObject = Json.obj(
-    "img" -> "https://placehold.it/200"
+    "img" -> user.avatar.link
   )
 
 }

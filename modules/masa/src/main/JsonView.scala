@@ -41,6 +41,7 @@ final class JsonView(
       }
 
   def playerView(player: GamePlayer, user: User): JsObject = Json.obj(
+    "name" -> user.username,
     "img" -> user.avatar.link
   )
 

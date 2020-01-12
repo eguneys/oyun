@@ -8,7 +8,7 @@ case class Avatar(value: String) {
 
   def link: String = makeAvatarUrl(value)
 
-  private def makeAvatarUrl(avatar: String): String = s"assets/_${AssetVersion.current}/avatars/701987-avatar/png/${avatar}"
+  private def makeAvatarUrl(avatar: String): String = s"/assets/_${AssetVersion.current}/avatars/701987-avatar/png/${avatar}"
 
 }
 

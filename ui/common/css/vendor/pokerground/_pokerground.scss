@@ -48,6 +48,13 @@
 
 }
 
+.seat .name {
+  position: absolute;
+  transform: translateX(-50%);
+  left: 50%;
+  bottom: 0;
+}
+
 .seat img {
   width: 100%;
   height: auto;

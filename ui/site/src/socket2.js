@@ -169,7 +169,9 @@ oyunkeyf.StrongSocket = function(url, version, settings) {
         return;
       }
       // it's impossible but according to previous login, it happens nonetheless
-      if (m.v > version + 1) return oyunkeyf.reload();
+      if (m.v > version + 1) {
+        return oyunkeyf.reload();
+      }
       version = m.v;
     }
     switch (m.t || false) {

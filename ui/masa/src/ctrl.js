@@ -72,5 +72,9 @@ export default function MasaController(opts, redraw) {
     }
   };
 
+  this.meJoin = (o) => {
+    this.pokerground.mejoin(o);
+  };
+
   this.socket = makeSocket(opts.socketSend, this);
 }

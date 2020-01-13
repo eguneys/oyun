@@ -5,7 +5,7 @@ import scala.concurrent.Promise
 
 
 import actorApi._
-import oyun.game.Pov
+import oyun.game.Masa
 import oyun.hub.Trouper
 import oyun.socket.RemoteSocket.{ Protocol => P, _ }
 import oyun.socket.Socket.{ Sri }
@@ -35,16 +35,15 @@ final class LobbySocket(
         members.clear()
 
       case JoinMasa(sri, masa, joinSide) =>
-        send(P.Out.tellSri(sri, joinMasaRedirect(masa pov joinSide)))
+        send(P.Out.tellSri(sri, joinMasaRedirect(masa)))
     }
 
-    private def joinMasaRedirect(pov: Pov) =
+    private def joinMasaRedirect(masa: Masa) =
       makeMessage("redirect",
         Json.obj(
-          "id" -> pov.masaId,
-          "url" -> s"/${pov.masaId}"
+          "id" -> masa.id,
+          "url" -> s"/${masa.id}"
         )
-          .add("cookie" -> oyun.masa.AnonCookie.json(pov))
       )
 
     private def quit(sri: Sri): Unit = {

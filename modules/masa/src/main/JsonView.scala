@@ -37,7 +37,13 @@ final class JsonView(
               "socket" -> s"/play/$masaId",
               "round" -> s"/$masaId"
             )
-          )
+          ).add("me" -> (for {
+            _ <- pov.side
+            p <- pov.player
+          } yield Json.obj(
+            "status" -> p.status,
+            "side" -> p.side
+          )))
       }
 
   def playerView(player: GamePlayer, user: User): JsObject = Json.obj(

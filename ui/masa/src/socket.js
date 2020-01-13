@@ -10,7 +10,8 @@ export function make(send, ctrl) {
 
   const handlers = {
     buyin: ctrl.buyIn,
-    sitoutnext: ctrl.sitoutNext
+    sitoutnext: ctrl.sitoutNext,
+    me: ctrl.meJoin
   };
 
   return {

@@ -20,7 +20,9 @@ final case class Masa(
   def player(userId: User.ID): Option[Player] =
     players find(_.userId == userId)
 
-  def pov(s: Side) = Pov(this, s)
+  def sideOf(userId: User.ID): Option[Side] = player(userId).map(_.side)
+
+  def pov(userId: User.ID) = Pov(this, sideOf(userId))
 
   def valid(s: Side) = nbSeats.valid(s)
 

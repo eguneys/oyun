@@ -23,7 +23,12 @@ final class Masa(
             data
           ))
       },
-      api = _ => ???
+      api = _ => env.api.masaApi.player(pov) map {
+        case data =>
+          Ok {
+            data
+          }
+      }
     )
 
   def watcher(masaId: String) = Open { implicit ctx =>
@@ -32,7 +37,7 @@ final class Masa(
     }
   }
 
-  private def proxyPov(masaId: String): Fu[Option[Pov]] = 
-    env.masa.proxyRepo.pov(masaId, Side.ZeroI)
+  private def proxyPov(masaId: String)(implicit ctx: Context): Fu[Option[Pov]] = 
+    env.masa.proxyRepo.pov(masaId, ctx.me.map(_.id))
   
 }

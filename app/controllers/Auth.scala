@@ -19,6 +19,15 @@ final class Auth(
   private def forms = env.security.forms
 
 
+  private def mobileUserOk(u: UserModel, sessionId: String): Fu[Result] =
+    funit map { _ =>
+      Ok {
+        env.user.jsonView(u) ++ Json.obj(
+          "sessionId" -> sessionId
+        )
+      }
+    }
+
   def authenticateUser(u: UserModel, result: Option[String => Result] = None)
   (implicit ctx: Context): Fu[Result] = api.saveAuthentication(u.id) flatMap { sessionId =>
     negotiate(
@@ -26,7 +35,7 @@ final class Auth(
         val redirectTo = get("referrer") getOrElse routes.Lobby.home.url
         result.fold(Redirect(redirectTo))(_(redirectTo))
       },
-      api = _ => ???
+      api = _ => mobileUserOk(u, sessionId)
     ) map authenticateCookie(sessionId)
   }
 
@@ -53,7 +62,7 @@ final class Auth(
     api.usernameOrEmailForm.bindFromRequest.fold(
       err => negotiate(
         html = Unauthorized(html.auth.login(api.loginForm, referrer)).fuccess,
-        api = _ => ??? // Unauthorized(errorsAsJson(err)).fuccess
+        api = _ => Unauthorized(errorsAsJson(err)).fuccess
       ),
       usernameOrEmail =>
       api.loadLoginForm(usernameOrEmail) flatMap {
@@ -63,7 +72,7 @@ final class Auth(
             html = {
               fuccess(Unauthorized(html.auth.login(err, referrer)))
             },
-            api = _ => ???
+            api = _ => Unauthorized(errorsAsJson(err)).fuccess
           ),
           result =>
           result.toOption match {
@@ -127,7 +136,28 @@ final class Auth(
 
       ),
       api = apiVersion =>
-      ???
+      forms.signup.mobile.bindFromRequest.fold(
+        err => {
+          jsonFormError(err)
+        },
+        data => {
+          val email = env.security.emailAddressValidator
+            .validate(data.realEmail) err s"Invalid email ${data.email}"
+          val passwordHash = env.user.authenticator passEnc ClearPassword(data.password)
+          env.user.repo
+            .create(
+              data.username,
+              passwordHash,
+              email.acceptable
+            )
+            .orFail(s"No user could be created for ${data.username}")
+            .map(_ -> email)
+            .flatMap {
+              case (user, EmailAddressValidator.Acceptable(email)) =>
+                welcome(user, email) >> authenticateUser(user)
+            }
+        }
+      )
     )
   }
 

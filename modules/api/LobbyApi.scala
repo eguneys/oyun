@@ -10,6 +10,13 @@ final class LobbyApi(
 
   private def masaApi = masaEnv.api
 
+  def masasJson: Fu[JsObject] = for {
+    masas <- masaApi.fetchVisibleMasas
+    masasJson <- masaEnv apiJsonView masas
+  } yield {
+    masasJson
+  }
+
   def apply(implicit ctx: Context): Fu[JsObject] =
     for {
       masas <- masaApi.fetchVisibleMasas

@@ -18,8 +18,8 @@ final class Lobby(env: Env) extends OyunController(env) {
     negotiate(
       html = keyPages.home(Results.Ok),
       api = _ =>
-      fuccess {
-        Ok(lobbyJson)
+      env.api.lobbyApi.masasJson map { json =>
+        Ok(lobbyJson ++ json)
       })
   }
 

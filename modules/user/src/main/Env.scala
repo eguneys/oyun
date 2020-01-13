@@ -28,6 +28,8 @@ final class Env(
   val lightUserApi: LightUserApi = wire[LightUserApi]
   val lightUser = lightUserApi.async
 
+  lazy val jsonView = wire[JsonView]
+
   private lazy val passHasher = new PasswordHasher(
     secret = config.passwordBPassSecret,
     logRounds = 10

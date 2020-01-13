@@ -1,6 +1,8 @@
 package controllers
 
 import play.api.http._
+import play.api.data.Form
+import play.api.i18n.Lang
 import play.api.libs.json.{ JsArray, JsObject, JsString, Json, Writes }
 import play.api.mvc._
 import scalatags.Text.Frag
@@ -109,5 +111,27 @@ abstract private[controllers] class OyunController(val env: Env)
   type RestoredUser = (Option[UserModel])
   private def restoreUser(req: RequestHeader): Fu[RestoredUser] =
     env.security.api restoreUser req
+
+
+  protected def errorsAsJson(form: Form[_])(implicit lang: Lang): JsObject = {
+
+    val json = JsObject(
+      form.errors
+        .groupBy(_.key)
+        .view
+        .mapValues { errors =>
+          JsArray {
+            errors.map { e =>
+              JsString(oyun.i18n.Translator.txt.literal(e.message, oyun.i18n.I18nDb.Site, e.args, lang))
+            }
+          }
+        }
+        .toMap
+    )
+    json
+  }
+
+  protected def jsonFormError(err: Form[_])(implicit lang: Lang) =
+    fuccess(BadRequest(errorsAsJson(err)))
 
 }

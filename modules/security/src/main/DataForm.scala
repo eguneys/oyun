@@ -33,6 +33,14 @@ final class DataForm(
       )(SignupData.apply)(_ => None)
     )
 
+    val mobile = Form(
+      mapping(
+        "username" -> trimField(username),
+        "password" -> text(minLength = 4),
+        "email" -> anyEmail
+      )(MobileSignupData.apply)(_ => None)
+    )
+
   }
 }
 
@@ -49,6 +57,13 @@ object DataForm {
 
     def realEmail = EmailAddress(email)
 
+  }
+
+  case class MobileSignupData(
+    username: String,
+    password: String,
+    email: String) {
+    def realEmail = EmailAddress(email)
   }
   
 }

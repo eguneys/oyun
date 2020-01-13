@@ -130,6 +130,7 @@ object RemoteSocket {
       }
 
       def commas(str: String): Array[String] = if (str == "-") Array.empty else str split ","
+      def boolean(str: String): Boolean = str == "+"
       def optional(str: String): Option[String] = if (str == "-") None else Some(str)
     }
 

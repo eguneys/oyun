@@ -44,6 +44,15 @@ final case class Masa(
     )
   }
 
+  def sitoutNext(side: Side, value: Boolean): Progress = {
+    val oP = player(side) flatMap { _.sitoutNext(value) }
+
+    val updated = updatePlayer(side, oP)
+    Progress(this, updated) ++ List(
+      SitoutNext(side, oP)
+    )
+  }
+
   private def updatePlayer(side: Side, p: Option[Player]) = 
     copy(seats = seats.updated(side.index, p))
 

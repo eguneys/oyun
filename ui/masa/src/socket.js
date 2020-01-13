@@ -9,6 +9,8 @@ export function make(send, ctrl) {
   const d = ctrl.data;
 
   const handlers = {
+    buyin: ctrl.buyIn,
+    sitoutnext: ctrl.sitoutNext
   };
 
   return {

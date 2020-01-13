@@ -8,8 +8,6 @@ export default function MasaController(opts, redraw) {
   
   this.pokerground = null;
 
-  this.socket = makeSocket(opts.socketSend, this);
-
   this.setPokerground = (pg) => {
     this.pokerground = pg;
   };
@@ -57,4 +55,22 @@ export default function MasaController(opts, redraw) {
     }
   };
 
+  this.buyIn = (o) => {
+    this.pokerground.join({
+      seatIndex: o.side,
+      seat: {
+        name: o.player.user,
+        img: o.player.avatar,
+        status: o.player.status
+      }
+    });
+  };
+
+  this.sitoutNext = (o) => {
+    if (!o.player) {
+      this.pokerground.leave({ seatIndex: o.side });
+    }
+  };
+
+  this.socket = makeSocket(opts.socketSend, this);
 }

@@ -14,7 +14,15 @@ case class Player(
   status: Player.Status
 ) {
 
+  import Player._
 
+  def sitoutNext(value: Boolean): Option[Player] = status match {
+    case WaitOthers | WaitNextHand => None
+    case _ => if (value)
+      copy(status = SitOutNextHand).some
+    else
+      copy(status = Involved).some
+  }
 
 }
 

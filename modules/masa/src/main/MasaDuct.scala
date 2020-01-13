@@ -31,16 +31,27 @@ final private[masa] class MasaDuct(
       }
     case Buyin(userId, side) =>
       handle { masa =>
-        sitter.buyin(masa, userId, side)
+        sitter.buyin(masa, userId, side) >>-
+        publishMasaPlayerStore
+      }
+    case SitoutNext(side, value) =>
+      handle { masa =>
+        sitter.sitoutNext(masa, side, value) >>-
+        publishMasaPlayerStore
       }
 
     case WsBoot =>
       proxy.withMasa { m =>
-        val uids = m.seats.map { _ ?? { _.userId } } mkString ","
-        socketSend(Protocol.Out.masaPlayerStore(Masa.Id(masaId), uids))
-        funit
+        funit >>-
+        publishMasaPlayerStore
       }
 
+  }
+
+  private def publishMasaPlayerStore: Funit = proxy withMasa { m =>
+    val uids = m.seats.map { _ ?? { _.userId } } mkString ","
+    socketSend(Protocol.Out.masaPlayerStore(Masa.Id(masaId), uids))
+    funit
   }
   
   private def handle(op: Masa => Fu[Events]): Funit =

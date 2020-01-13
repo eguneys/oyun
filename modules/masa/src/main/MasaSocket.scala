@@ -42,6 +42,8 @@ final class MasaSocket(
   private lazy val masaHandler: Handler = {
     case Protocol.In.Sit(id, side) =>
       tellMasa(id.masaId, Buyin(id.userId, side))
+    case Protocol.In.SitoutNext(masaId, side, value) =>
+      tellMasa(masaId, SitoutNext(side, value))
     case P.In.WsBoot =>
       logger.warn("Remote socket boot")
       masas.tellAll(MasaDuct.WsBoot)
@@ -62,6 +64,7 @@ object MasaSocket {
     object In {
       case class PlayerDo(fullId: FullId, tpe: String) extends P.In
       case class Sit(fullId: FullId, side: Side) extends P.In
+      case class SitoutNext(masaId: Masa.Id, side: Side, value: Boolean) extends P.In
 
       val reader: P.In.Reader = raw => {
         raw.path match {
@@ -70,6 +73,13 @@ object MasaSocket {
               case Array(fullId, side) =>
                 Side(side) map {
                   Sit(FullId(fullId), _)
+                }
+            }
+          case "m/sitoutnext" =>
+            raw.get(3) {
+              case Array(masaId, side, valueS) =>
+                Side(side) map {
+                  SitoutNext(Masa.Id(masaId), _, P.In.boolean(valueS))
                 }
             }
           case _ => RP.In.reader(raw)

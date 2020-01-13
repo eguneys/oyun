@@ -18,4 +18,12 @@ final private class Sitter(
     }
     else fufail(ClientError(s"$masa can't sit $userId"))
 
+
+  def sitoutNext(masa: Masa, side: Side, value: Boolean)
+    (implicit proxy: MasaProxy): Fu[Events] = {
+    val prog = masa.sitoutNext(side, value)
+    proxy.save(prog) >>
+    fuccess(prog.events)
+  }
+
 }

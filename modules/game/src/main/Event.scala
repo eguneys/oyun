@@ -11,6 +11,19 @@ sealed trait Event {
   def owner: Boolean = false
 }
 
+case class SitoutNext(side: Side, oPlayer: Option[Player]) extends Event {
+
+  def typ = "sitoutnext"
+
+  def data = Json.obj(
+    "side" -> side,
+    "player" -> (oPlayer.fold[JsValue](JsNull){ player => Json.obj(
+      "status" -> player.status
+    ) })
+  )
+
+}
+
 case class BuyIn(side: Side, player: Player) extends Event {
 
   def typ = "buyin"

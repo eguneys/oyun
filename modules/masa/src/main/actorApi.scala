@@ -15,5 +15,6 @@ case class SocketStatus(
 package masa {
 
   case class Buyin(userId: User.ID, side: Side)
+  case class SitoutNext(side: Side, value: Boolean)
   
 }

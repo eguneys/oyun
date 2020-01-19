@@ -64,7 +64,9 @@ final case class Masa(
       game = game.map(_.update(pokerGame))
     )
 
-    val events = Event.Move(move, pokerGame.situation) :: Nil
+    val events = Event.Move(move, pokerGame.situation) :: 
+      updated.players.map { Event.Me(updated, _) 
+}
     Progress(this, updated, events)
   }
 
@@ -83,7 +85,7 @@ final case class Masa(
     val events = Event.Deal(
       game.poker.situation,
       game.seatIndexes
-    ) :: players.map { Event.Me(updated, _) }
+    ) :: updated.players.map { Event.Me(updated, _) }
 
     Progress(this, updated, events)
   }

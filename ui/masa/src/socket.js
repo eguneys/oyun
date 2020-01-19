@@ -11,7 +11,8 @@ export function make(send, ctrl) {
   const handlers = {
     buyin: ctrl.buyIn,
     sitoutnext: ctrl.sitoutNext,
-    me: ctrl.meJoin
+    deal: ctrl.deal,
+    me: ctrl.meSet
   };
 
   return {

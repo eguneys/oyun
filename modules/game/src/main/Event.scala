@@ -20,7 +20,8 @@ object Event {
     def typ = "deal"
 
     def data = Json.obj(
-      "fen" -> fen
+      "fen" -> fen,
+      "seatIndexes" -> seatIndexes
     )
   }
 

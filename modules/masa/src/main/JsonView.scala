@@ -3,7 +3,7 @@ package oyun.masa
 import play.api.libs.json._
 import scala.concurrent.ExecutionContext
 
-import oyun.game.{ Masa, Pov, Player => GamePlayer }
+import oyun.game.{ Game, Masa, Pov, Player => GamePlayer }
 import oyun.game.SideJson._
 import oyun.user.{ User, UserRepo }
 import actorApi.SocketStatus
@@ -45,7 +45,13 @@ final class JsonView(
             "status" -> p.status,
             "side" -> p.side
           )))
+            .add("game" -> masa.game.map(gameJson))
       }
+
+  def gameJson(game: Game): JsObject = Json.obj(
+    "fen" -> game.visual,
+    "seatIndexes" -> game.seatIndexes
+  )
 
   def playerView(player: GamePlayer, user: User): JsObject = Json.obj(
     "name" -> user.username,

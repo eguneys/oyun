@@ -11,7 +11,7 @@ final case class Masa(
   nbSeats: NbSeats,
   stakes: Masa.Stakes,
   seats: Vector[Option[Player]],
-  game: Option[PokerGame] = None
+  game: Option[Game] = None
 ) {
 
   import Masa._
@@ -47,13 +47,7 @@ final case class Masa(
 
   def deal: Progress = {
 
-    val game = PokerGame(
-      stakes.blinds,
-      button = players.indexWhere(_.button) | 0,
-      iStacks = players.map(_.stack)
-    )
-
-    val seatIndexes = players.map(_.side)
+    val game = Game.makeGame(stakes.blinds, players)
 
     val updated = copy(
       seats = seats.map {
@@ -64,8 +58,8 @@ final case class Masa(
     )
 
     val events = Event.Deal(
-      game.situation,
-      seatIndexes
+      game.poker.situation,
+      game.seatIndexes
     ) :: Nil
 
     Progress(this, updated, events)

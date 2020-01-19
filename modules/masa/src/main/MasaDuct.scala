@@ -75,7 +75,7 @@ final private[masa] class MasaDuct(
         funit >>-
         publishMasaPlayerStore
       }
-
+    case Stop =>
   }
 
   private def publishMasaPlayerStore: Funit = proxy withMasa { m =>
@@ -122,6 +122,7 @@ final private[masa] class MasaDuct(
 
 object MasaDuct {
 
+  case object Stop
   case object WsBoot
 
   private[masa] class Dependencies(

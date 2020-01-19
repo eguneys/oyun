@@ -28,6 +28,7 @@ libraryDependencies ++= Seq(
   macwire.macros, macwire.util, play.json, ws,
   poker, scalaz, scalalib, hasher,
   reactivemongo.driver, prismic, scalatags,
+  kamon.core, kamon.influxdb, kamon.metrics,
   scaffeine, lettuce
 ) ++ silencer.bundle
 
@@ -38,7 +39,7 @@ lazy val moduleCPDeps = moduleRefs map { new sbt.ClasspathDependency(_, None) }
 
 lazy val api = module("api",
   moduleCPDeps,
-  Seq(play.api, play.json, hasher) ++ reactivemongo.bundle
+  Seq(play.api, play.json, kamon.core, kamon.influxdb, hasher) ++ reactivemongo.bundle
 ).settings(
   aggregate in Runtime := false,
   aggregate in Test := true
@@ -62,7 +63,7 @@ lazy val i18n = module("i18n",
 
 lazy val common = module("common",
   Seq(),
-  Seq(scalatags, scaffeine) ++ reactivemongo.bundle
+  Seq(kamon.core, scalatags, scaffeine) ++ reactivemongo.bundle
 )
 
 lazy val db = module("db",

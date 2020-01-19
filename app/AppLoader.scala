@@ -20,6 +20,8 @@ final class OyunComponents(ctx: ApplicationLoader.Context)
     _.configure(ctx.environment, ctx.initialConfiguration, Map.empty)
   }
 
+  oyun.mon.start(configuration.get[Boolean]("kamon.enabled"))
+
   import _root_.controllers._
 
   def cookieBaker = new LegacySessionCookieBaker(httpConfiguration.session, cookieSigner)
@@ -51,6 +53,11 @@ final class OyunComponents(ctx: ApplicationLoader.Context)
   val router: Router = {
     val prefix: String = "/"
     wire[Routes]
+  }
+
+  if (configuration.get[Boolean]("kamon.enabled")) {
+    oyun.log("boot").info("Kamon is enabled")
+    kamon.Kamon.loadModules()
   }
 
 }

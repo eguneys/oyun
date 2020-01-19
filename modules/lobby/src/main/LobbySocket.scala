@@ -28,7 +28,6 @@ final class LobbySocket(
       case GetMember(sri, promise) => promise success members.get(sri.value)
 
       case Join(member) => 
-        println(members.size)
         members += (member.sri.value -> member)
       case LeaveBatch(sris) => sris foreach quit
       case LeaveAll =>

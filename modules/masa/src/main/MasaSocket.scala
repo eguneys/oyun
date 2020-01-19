@@ -1,7 +1,8 @@
 package oyun.masa
 
-import akka.actor.{ ActorSystem }
+import akka.actor.{ ActorSystem, Cancellable, Scheduler }
 import play.api.libs.json._
+import scala.concurrent.duration._
 import scala.concurrent.ExecutionContext
 
 import actorApi._
@@ -34,6 +35,7 @@ final class MasaSocket(
         masaId = id,
         socketSend = send
       )(ec, proxy)
+      terminationDelay schedule Masa.Id(id)
       duct
     },
     initialCapacity = 32768
@@ -53,11 +55,21 @@ final class MasaSocket(
       masas.tellAll(MasaDuct.WsBoot)
   }
 
+  private def finishMasa(masaId: Masa.Id): Unit =
+    masas.terminate(masaId.value, _ ! MasaDuct.Stop)
+
   private lazy val send: String => Unit = remoteSocketApi.makeSender("m-out").apply _
 
   remoteSocketApi.subscribe("m-in", Protocol.In.reader)(
     masaHandler orElse remoteSocketApi.baseHandler
   )// >>- send(P.Out.boot)
+
+
+  system.scheduler.scheduleWithFixedDelay(60 seconds, 60 seconds) { () =>
+    oyun.mon.masa.ductCount.update(masas.size)
+  }
+
+  private val terminationDelay = new TerminationDelay(system.scheduler, 1 minute, finishMasa)
 
 }
 
@@ -117,6 +129,28 @@ object MasaSocket {
     }
 
 
+  }
+
+  final private class TerminationDelay(
+    scheduler: Scheduler,
+    duration: FiniteDuration,
+    terminate: Masa.Id => Unit
+  )(implicit ec: scala.concurrent.ExecutionContext) {
+
+    import java.util.concurrent.ConcurrentHashMap
+
+    private[this] val terminations = new ConcurrentHashMap[String, Cancellable](128)
+
+    def schedule(masaId: Masa.Id): Unit = terminations.compute(
+      masaId.value,
+      (id, canc) => {
+        Option(canc).foreach(_.cancel)
+        scheduler.scheduleOnce(duration) {
+          terminations remove id
+          terminate(Masa.Id(id))
+        }
+      }
+    )
   }
 
 }

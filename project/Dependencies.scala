@@ -57,6 +57,12 @@ object Dependencies {
     val json    = "com.typesafe.play" %% "play-json" % "2.8.1"
   }
 
+  object kamon {
+    val core     = "io.kamon" %% "kamon-core"           % "2.0.4"
+    val influxdb = "io.kamon" %% "kamon-influxdb"       % "2.0.1-LILA"
+    val metrics  = "io.kamon" %% "kamon-system-metrics" % "2.0.1"
+  }
+
   object silencer {
     val version = "1.4.4"
     val plugin  = "com.github.ghik" % "silencer-plugin" % version cross CrossVersion.full

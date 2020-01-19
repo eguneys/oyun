@@ -1,7 +1,8 @@
 package oyun.lobby
 package actorApi
 
-import oyun.game.{ Masa, Side }
+import poker.{ Side }
+import oyun.game.{ Masa }
 
 import oyun.socket.Socket.{ Sri }
 

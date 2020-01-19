@@ -4,6 +4,7 @@ import play.api.libs.json._
 import scala.concurrent.ExecutionContext
 
 import oyun.game.{ Masa, Pov, Player => GamePlayer }
+import oyun.game.SideJson._
 import oyun.user.{ User, UserRepo }
 import actorApi.SocketStatus
 

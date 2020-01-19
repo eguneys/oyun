@@ -1,6 +1,6 @@
 package oyun.masa
 
-import oyun.game.{ Pov, Masa, Side }
+import oyun.game.{ Pov, Masa }
 import oyun.user.User
 
 final class MasaProxyRepo(

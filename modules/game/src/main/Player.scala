@@ -6,12 +6,16 @@ import ornicar.scalalib.Random
 
 import oyun.user.{ User, Avatar }
 
+import poker.{ Side }
+
 case class Player(
   id: Player.ID, // random
   side: Side,
   userId: User.ID,
   avatar: Avatar,
-  status: Player.Status
+  status: Player.Status,
+  button: Boolean,
+  stack: Float
 ) {
 
   import Player._
@@ -23,6 +27,11 @@ case class Player(
     else
       copy(status = Involved).some
   }
+
+  def involved: Player = copy(status = Involved)
+
+  def buttonOn = copy(button = true)
+  def buttonOff = copy(button = false)
 
 }
 
@@ -50,12 +59,16 @@ object Player {
   def apply(
     side: Side,
     user: User,
-    status: Status) =
+    status: Status,
+    button: Boolean,
+    stack: Float) =
     new Player(id = makePlayerId,
       side = side,
       userId = user.id,
       avatar = user.avatar,
-      status = status)
+      status = status,
+      button = button,
+      stack = stack)
 
   def makePlayerId = Random nextString 4
 

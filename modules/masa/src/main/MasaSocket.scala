@@ -6,7 +6,8 @@ import scala.concurrent.ExecutionContext
 
 import actorApi._
 import actorApi.masa._
-import oyun.game.{ Masa, Side, Event }
+import poker.{ Side }
+import oyun.game.{ Masa, Event }
 import oyun.game.Masa.{ FullId }
 import oyun.room.RoomSocket.{ Protocol => RP, _ }
 import oyun.socket.RemoteSocket.{ Protocol => P, _ }

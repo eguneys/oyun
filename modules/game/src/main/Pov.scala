@@ -1,5 +1,7 @@
 package oyun.game
 
+import poker.{ Side }
+
 case class Pov(masa: Masa, side: Option[Side] = None) {
 
   def realSide = side | Side.ZeroI

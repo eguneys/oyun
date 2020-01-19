@@ -23,6 +23,7 @@ object BuildSettings {
     scalaz,
     scalalib,
     jodaTime,
+    poker,
     ws,
     macwire.macros,
     macwire.util,

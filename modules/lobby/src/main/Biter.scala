@@ -2,7 +2,8 @@ package oyun.lobby
 
 import actorApi.{ JoinMasa }
 import oyun.socket.Socket.{ Sri }
-import oyun.game.{ Masa, Side }
+import poker.{ Side }
+import oyun.game.{ Masa }
 
 final private class Biter(
   masaRepo: oyun.game.MasaRepo

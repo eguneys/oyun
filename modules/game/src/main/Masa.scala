@@ -2,13 +2,16 @@ package oyun.game
 
 import ornicar.scalalib.Random
 
+import poker.{ NbSeats, Side, Game => PokerGame }
+
 import oyun.user.User
 
 final case class Masa(
   id: Masa.ID,
   nbSeats: NbSeats,
   stakes: Masa.Stakes,
-  seats: Vector[Option[Player]]
+  seats: Vector[Option[Player]],
+  game: Option[PokerGame] = None
 ) {
 
   import Masa._
@@ -33,16 +36,52 @@ final case class Masa(
   def sitable(userId: User.ID, side: Side) = 
     valid(side) && empty(side) && !sitting(userId)
 
+  def noPlayers = players.length == 0
+  def atLeastTwo = players.length >= 2
+
+  def gameInProgress = game.isDefined
+
+  def noGameInProgress = !gameInProgress
+
+  def dealable = noGameInProgress && atLeastTwo
+
+  def deal: Progress = {
+
+    val game = PokerGame(
+      stakes.blinds,
+      button = players.indexWhere(_.button) | 0,
+      iStacks = players.map(_.stack)
+    )
+
+    val seatIndexes = players.map(_.side)
+
+    val updated = copy(
+      seats = seats.map {
+        case Some(p) => Some(p.involved)
+        case _ => None
+      },
+      game = Some(game)
+    )
+
+    val events = Event.Deal(
+      game.situation,
+      seatIndexes
+    ) :: Nil
+
+    Progress(this, updated, events)
+  }
+
   def buyin(user: User, side: Side): Progress = {
-    val status = if (players.length == 0)
-      Player.WaitOthers
+
+    val p = if (noPlayers)
+      Player(side, user, Player.WaitOthers, true, 10f)
     else
-      Player.WaitNextHand
-    val p = Player(side, user, status)
+      Player(side, user, Player.WaitNextHand, false, 10f)
+
     val updated = updatePlayer(side, Some(p))
     Progress(this, updated) ++ List(
-      BuyIn(side, p),
-      Me(side, p)
+      Event.BuyIn(side, p),
+      Event.Me(side, p)
     )
   }
 
@@ -51,7 +90,7 @@ final case class Masa(
 
     val updated = updatePlayer(side, oP)
     Progress(this, updated) ++ List(
-      SitoutNext(side, oP)
+      Event.SitoutNext(side, oP)
     )
   }
 

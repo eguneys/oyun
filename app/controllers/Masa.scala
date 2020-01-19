@@ -5,7 +5,8 @@ import play.api.mvc._
 
 import oyun.api.Context
 import oyun.app._
-import oyun.game.{ Side, Pov }
+import poker.{ Side }
+import oyun.game.{ Pov }
 import views._
 
 

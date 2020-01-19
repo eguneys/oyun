@@ -26,7 +26,7 @@ PlayKeys.generateAssetsJar := false
 
 libraryDependencies ++= Seq(
   macwire.macros, macwire.util, play.json, ws,
-  scalaz, scalalib, hasher,
+  poker, scalaz, scalalib, hasher,
   reactivemongo.driver, prismic, scalatags,
   scaffeine, lettuce
 ) ++ silencer.bundle

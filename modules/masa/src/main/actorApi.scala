@@ -3,7 +3,7 @@ package actorApi
 
 import scala.concurrent.Promise
 
-import oyun.game.{ Side }
+import poker.{ Side }
 import oyun.user.User
 import oyun.socket.Socket.SocketVersion
 
@@ -16,5 +16,8 @@ package masa {
 
   case class Buyin(userId: User.ID, side: Side)
   case class SitoutNext(side: Side, value: Boolean)
+
+  case object MaybeDeal
+
   
 }

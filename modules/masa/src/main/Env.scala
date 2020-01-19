@@ -48,5 +48,5 @@ final class Env(
   lazy val proxyRepo: MasaProxyRepo = wire[MasaProxyRepo]
 
   private lazy val sitter: Sitter = wire[Sitter]
-
+  private lazy val dealer: Dealer = wire[Dealer]
 }

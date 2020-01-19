@@ -1,5 +1,7 @@
 package oyun.game
 
+import poker. { NbSeats }
+
 case class Schedule(
   nbSeats: NbSeats,
   stakes: Masa.Stakes

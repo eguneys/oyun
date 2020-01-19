@@ -1,6 +1,7 @@
 package oyun.masa
 
-import oyun.game.{ Masa, Side }
+import poker.{ Side }
+import oyun.game.{ Masa }
 import oyun.user.User
 
 final private class Sitter(

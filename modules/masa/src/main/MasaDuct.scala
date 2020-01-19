@@ -2,7 +2,8 @@ package oyun.masa
 
 import actorApi._, masa._
 import oyun.hub.Duct
-import oyun.game.{ Masa, Side }
+import poker.{ Side }
+import oyun.game.{ Masa }
 import oyun.room.RoomSocket.{ Protocol => RP, _ }
 import oyun.socket.RemoteSocket.{ Protocol => _, _ }
 import oyun.socket.Socket.{ makeMessage, SocketVersion }
@@ -29,15 +30,26 @@ final private[masa] class MasaDuct(
           version = version
         )
       }
+
+    // round
+
+    case MaybeDeal => handle { masa =>
+      masa.dealable ?? dealer.deal(masa)
+    }
+
     case Buyin(userId, side) =>
       handle { masa =>
         sitter.buyin(masa, userId, side) >>-
-        publishMasaPlayerStore
+        publishMasaPlayerStore >>- {
+          this ! MaybeDeal
+        }
       }
     case SitoutNext(side, value) =>
       handle { masa =>
         sitter.sitoutNext(masa, side, value) >>-
-        publishMasaPlayerStore
+        publishMasaPlayerStore >>- {
+          this ! MaybeDeal
+        }
       }
 
     case WsBoot =>
@@ -89,7 +101,8 @@ object MasaDuct {
 
   private[masa] class Dependencies(
     val masaRepo: oyun.game.MasaRepo,
-    val sitter: Sitter
+    val sitter: Sitter,
+    val dealer: Dealer
   )
 
 }

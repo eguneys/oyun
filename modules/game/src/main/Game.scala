@@ -1,8 +1,10 @@
 package oyun.game
 
-import poker.{ Side, Game => PokerGame }
+import poker.{ Status, Side, Game => PokerGame }
 
-case class Game(poker: PokerGame, seatIndexes: Vector[Side]) {
+case class Game(poker: PokerGame, 
+  status: Status,
+  seatIndexes: Vector[Side]) {
 
   def situation = poker.situation
   def dealer = poker.dealer
@@ -16,7 +18,20 @@ case class Game(poker: PokerGame, seatIndexes: Vector[Side]) {
 
   def turnOf(s: Side) = s == sideToAct
 
-  def update(game: PokerGame) = copy(poker = game)
+  def playable = status < Status.OneWin
+
+  def started = status >= Status.Started
+
+  def finished = status >= Status.OneWin
+
+  def update(game: PokerGame) = copy(poker = game,
+    status = game.situation.status | status
+  )
+
+  def start =
+    if (started) this
+    else
+      copy(status = Status.Started)
   
 }
 
@@ -33,6 +48,7 @@ object Game {
     val seatIndexes = players.map(_.side).toVector
 
     Game(poker = poker,
+      status = Status.Created,
       seatIndexes = seatIndexes)
   }
 }

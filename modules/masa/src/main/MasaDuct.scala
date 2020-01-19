@@ -55,7 +55,13 @@ final private[masa] class MasaDuct(
         publishMasaPlayerStore >>- {
           this ! MaybeDeal
         }
-      }
+      }.addEffects(
+        err => {
+          socketSend(Protocol.Out.resyncPlayer(Masa.Id(masaId) full userId))
+        },
+        lap => {
+        }
+      )
     case SitoutNext(side, value) =>
       handle { masa =>
         sitter.sitoutNext(masa, side, value) >>-

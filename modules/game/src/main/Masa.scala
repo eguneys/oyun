@@ -2,7 +2,7 @@ package oyun.game
 
 import ornicar.scalalib.Random
 
-import poker.{ NbSeats, Side, Move, Game => PokerGame }
+import poker.{ NbSeats, Status, Side, Move, Game => PokerGame }
 
 import oyun.user.User
 
@@ -33,7 +33,9 @@ final case class Masa(
   def turnOf(p: Player) = player.exists(_==p)
   def turnOf(s: Side) = game.exists { _.turnOf(s) }
 
-  def playableBy(s: Side) = turnOf(s)
+  def playable = game.exists { _.playable }
+
+  def playableBy(s: Side) = playable && turnOf(s)
 
 
   def possibleMoves(player: Player) = game.flatMap { game =>
@@ -58,6 +60,15 @@ final case class Masa(
   def noGameInProgress = !gameInProgress
 
   def dealable = noGameInProgress && atLeastTwo
+
+  def finish(status: Status) = {
+    Progress(
+      this,
+      copy(
+        game = game.map(_.copy(status = status))
+      ),
+      Nil)
+  }
 
   def update(pokerGame: PokerGame, move: Move): Progress = {
     val updated = copy(

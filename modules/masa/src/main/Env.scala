@@ -47,6 +47,7 @@ final class Env(
 
   lazy val proxyRepo: MasaProxyRepo = wire[MasaProxyRepo]
 
+  private lazy val finisher: Finisher = wire[Finisher]
   private lazy val sitter: Sitter = wire[Sitter]
   private lazy val dealer: Dealer = wire[Dealer]
   private lazy val player: Player = wire[Player]

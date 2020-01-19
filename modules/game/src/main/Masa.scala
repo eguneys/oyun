@@ -2,7 +2,7 @@ package oyun.game
 
 import ornicar.scalalib.Random
 
-import poker.{ NbSeats, Side, Game => PokerGame }
+import poker.{ NbSeats, Side, Move, Game => PokerGame }
 
 import oyun.user.User
 
@@ -27,6 +27,20 @@ final case class Masa(
 
   def pov(userId: User.ID) = Pov(this, sideOf(userId))
 
+
+  def player: Option[Player] = game.flatMap { g => player(g.sideToAct) }
+
+  def turnOf(p: Player) = player.exists(_==p)
+  def turnOf(s: Side) = game.exists { _.turnOf(s) }
+
+  def playableBy(s: Side) = turnOf(s)
+
+
+  def possibleMoves(player: Player) = game.flatMap { game =>
+    turnOf(player) option game.situation.possibleActs
+  }
+
+
   def valid(s: Side) = nbSeats.valid(s)
 
   def empty(s: Side) = !player(s).isDefined
@@ -45,6 +59,15 @@ final case class Masa(
 
   def dealable = noGameInProgress && atLeastTwo
 
+  def update(pokerGame: PokerGame, move: Move): Progress = {
+    val updated = copy(
+      game = game.map(_.update(pokerGame))
+    )
+
+    val events = Event.Move(move, pokerGame.situation) :: Nil
+    Progress(this, updated, events)
+  }
+
   def deal: Progress = {
 
     val game = Game.makeGame(stakes.blinds, players)
@@ -60,7 +83,7 @@ final case class Masa(
     val events = Event.Deal(
       game.poker.situation,
       game.seatIndexes
-    ) :: Nil
+    ) :: players.map { Event.Me(updated, _) }
 
     Progress(this, updated, events)
   }
@@ -75,7 +98,7 @@ final case class Masa(
     val updated = updatePlayer(side, Some(p))
     Progress(this, updated) ++ List(
       Event.BuyIn(side, p),
-      Event.Me(side, p)
+      Event.Me(updated, p)
     )
   }
 
@@ -90,6 +113,8 @@ final case class Masa(
 
   private def updatePlayer(side: Side, p: Option[Player]) = 
     copy(seats = seats.updated(side.index, p))
+
+
 
 }
 

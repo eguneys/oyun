@@ -12,6 +12,7 @@ trait Oyunisms
     with scalalib.OrnicarOption
     with scalalib.Zeros
     with scalalib.Zero.Syntax
+    with scalalib.Validation
     with scalaz.std.ListFunctions
     with scalaz.std.ListInstances
     with scalaz.std.OptionFunctions
@@ -19,7 +20,9 @@ trait Oyunisms
     with scalaz.syntax.std.ToListOps
     with scalaz.syntax.std.ToOptionIdOps
     with scalaz.syntax.ToIdOps 
-    with scalaz.syntax.ToMonoidOps {
+    with scalaz.syntax.ToMonoidOps
+    with scalaz.syntax.ToShowOps
+    with scalaz.syntax.ToValidationOps {
 
   type StringValue = oyun.base.OyunTypes.StringValue
 

@@ -6,10 +6,22 @@ export function makeConfig(ctrl) {
   
   console.log(data);
 
+  const { game } = data;
+
+  let gameClock,
+      gameFen,
+      gameSeatIndexes;
+
+  if (game) {
+    gameClock = game.clock;
+    gameFen = game.fen;
+    gameSeatIndexes = game.seatIndexes;
+  }
+
   return {
-    fen: data.fen,
-    clock: data.clock,
-    seatIndexes: data.seatIndexes,
+    clock: gameClock,
+    fen: gameFen,
+    seatIndexes: gameSeatIndexes,
     me: data.me,
     seats: data.seats,
     status: data.status,

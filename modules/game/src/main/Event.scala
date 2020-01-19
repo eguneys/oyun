@@ -4,7 +4,10 @@ import play.api.libs.json._
 
 import Player._
 
-import poker.{ Side, Situation }
+import poker.{ PlayerAct,
+  Side,
+  Situation,
+  Move => PokerMove }
 import SideJson._
 
 sealed trait Event {
@@ -16,7 +19,30 @@ sealed trait Event {
 
 object Event {
 
-  case class Deal(fen: String, seatIndexes: List[Side]) extends Event {
+  case class Move(
+    act: PlayerAct
+  ) extends Event {
+    def typ = "move"
+
+    def data = Json.obj(
+    )
+    
+
+
+  }
+
+  object Move {
+
+    def apply(
+      move: PokerMove,
+      situation: Situation): Move = Move(
+      move.playerAct
+    )
+
+  }
+
+
+  case class Deal(fen: String, seatIndexes: Vector[Side]) extends Event {
     def typ = "deal"
 
     def data = Json.obj(
@@ -27,7 +53,7 @@ object Event {
 
   object Deal {
     def apply(
-      situation: Situation, seatIndexes: List[Side]): Deal = Deal(
+      situation: Situation, seatIndexes: Vector[Side]): Deal = Deal(
         fen = situation.dealer.visual,
         seatIndexes = seatIndexes
     )
@@ -62,14 +88,48 @@ object Event {
 
   }
 
-  case class Me(side: Side, player: Player) extends Event {
+  case class Me(possibleMoves: Option[List[PlayerAct]], player: Player) extends Event {
     def typ = "me"
 
-    def data = Json.obj(
-      "side" -> side,
-      "status" -> player.status.forsyth
-    )
+    def data = Me.json(possibleMoves, player)
+
+    private def side = player.side
 
     override def only = Some(side)
+  }
+
+  object Me {
+
+    def json(possibleMoves: Option[List[PlayerAct]], player: Player) = 
+      Json.obj(
+        "status" -> player.status,
+        "side" -> player.side
+      ).add("possibleMoves" -> possibleMoves.map(PossibleMoves.json))
+
+    def json(masa: Masa, player: Player): JsObject = 
+      json(masa.possibleMoves(player), player)
+
+    def apply(masa: Masa, player: Player): Me = Me(
+      possibleMoves = masa.possibleMoves(player),
+      player = player)
+
+  }
+
+  object PossibleMoves {
+
+    def json(acts: List[PlayerAct]) =
+      if (acts.isEmpty) JsNull
+      else {
+        val sb = new java.lang.StringBuilder(128)
+        var first = true
+        acts foreach {
+          case act =>
+            if (first) first = false
+            else sb append " "
+            sb append act.uci
+        }
+        JsString(sb.toString)
+      }
+
   }
 }

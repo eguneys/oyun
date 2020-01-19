@@ -1,6 +1,7 @@
 package oyun.game
 
 import poker.{ Side }
+import oyun.user.User
 
 case class Pov(masa: Masa, side: Option[Side] = None) {
 
@@ -20,6 +21,6 @@ object Pov {
 
   def apply(masa: Masa, player: Player) = new Pov(masa, Some(player.side))
 
-  def apply(masa: Masa, playerId: Player.ID): Option[Pov] =
-    masa player playerId map { apply(masa, _) }
+  def apply(masa: Masa, userId: User.ID): Option[Pov] =
+    masa player userId map { apply(masa, _) }
 }

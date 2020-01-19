@@ -49,4 +49,5 @@ final class Env(
 
   private lazy val sitter: Sitter = wire[Sitter]
   private lazy val dealer: Dealer = wire[Dealer]
+  private lazy val player: Player = wire[Player]
 }

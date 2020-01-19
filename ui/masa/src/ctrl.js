@@ -12,6 +12,23 @@ export default function MasaController(opts, redraw) {
     this.pokerground = pg;
   };
 
+  const actualSendMove = (tpe, data) => {
+    const socketOpts = {
+      ackable: true
+    };
+
+    this.socket.send(tpe, data, socketOpts);
+
+    this.redraw();
+  };
+
+  const sendMove = (uci) => {
+    const move = {
+      u: uci
+    };
+    actualSendMove('move', move);
+  };
+
   const onSitoutNextHand = (value) => {
     this.socket.sitoutNextHand(value);
   };
@@ -27,7 +44,7 @@ export default function MasaController(opts, redraw) {
   };
 
   const onMove = (move) => {
-    console.log(move);
+    sendMove(move);
   };
 
   const onFlag = () => {

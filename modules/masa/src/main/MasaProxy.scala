@@ -1,7 +1,8 @@
 package oyun.masa
 
 import scala.util.Success
-import oyun.game.{ Masa, Progress }
+import oyun.game.{ Pov, Masa, Progress }
+import oyun.user.User
 
 final private class MasaProxy(
   id: Masa.ID,
@@ -30,6 +31,9 @@ final private class MasaProxy(
         case Some(g) => f(g)
       }
   }
+
+  def withPov[A](userId: User.ID)(f: Option[Pov] => Fu[A]): Fu[A] =
+    withMasa(m => f(Pov(m, userId)))
 
   private[this] var cache: Fu[Option[Masa]] = fetch
 

@@ -47,6 +47,15 @@ final class PimpedFuture[A](private val fua: Fu[A]) extends AnyVal {
   }
 
 
+  def addEffects(fail: Exception => Unit, succ: A => Unit)(implicit ec: EC): Fu[A] = {
+    fua onComplete {
+      case scala.util.Failure(e: Exception) => fail(e)
+      case scala.util.Failure(e) => throw e
+      case scala.util.Success(e) => succ(e)
+    }
+    fua
+  }
+
   def addEffectAnyway(inAnyCase: => Unit)(implicit ec: EC): Fu[A] = {
     fua onComplete { _ =>
       inAnyCase

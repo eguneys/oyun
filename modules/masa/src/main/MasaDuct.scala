@@ -3,7 +3,8 @@ package oyun.masa
 import actorApi._, masa._
 import oyun.hub.Duct
 import poker.{ Side }
-import oyun.game.{ Masa }
+import oyun.game.{ Pov, Masa }
+import oyun.user.User
 import oyun.room.RoomSocket.{ Protocol => RP, _ }
 import oyun.socket.RemoteSocket.{ Protocol => _, _ }
 import oyun.socket.Socket.{ makeMessage, SocketVersion }
@@ -36,6 +37,17 @@ final private[masa] class MasaDuct(
     case MaybeDeal => handle { masa =>
       masa.dealable ?? dealer.deal(masa)
     }
+
+    case p: HumanPlay =>
+      handle(p.userId) { pov =>
+        player.human(p, this)(pov)
+      }.addEffects(
+        err => {
+          socketSend(Protocol.Out.resyncPlayer(Masa.Id(masaId) full p.userId))
+        },
+        lap => {
+        }
+      )
 
     case Buyin(userId, side) =>
       handle { masa =>
@@ -71,6 +83,13 @@ final private[masa] class MasaDuct(
       handleAndPublish(op(m))
     }
 
+  private def handle(userId: User.ID)(op: Pov => Fu[Events]): Funit =
+    proxy.withPov(userId) {
+      _ ?? { pov =>
+        handleAndPublish(op(pov))
+      }
+    }
+
   private def handleAndPublish(events: Fu[Events]): Funit =
     events dmap publish recover errorHandler("handle")
 
@@ -102,7 +121,8 @@ object MasaDuct {
   private[masa] class Dependencies(
     val masaRepo: oyun.game.MasaRepo,
     val sitter: Sitter,
-    val dealer: Dealer
+    val dealer: Dealer,
+    val player: Player
   )
 
 }

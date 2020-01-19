@@ -7,6 +7,7 @@ import scala.concurrent.ExecutionContext
 import actorApi._
 import actorApi.masa._
 import poker.{ Side }
+import poker.format.Uci
 import oyun.game.{ Masa, Event }
 import oyun.game.Masa.{ FullId }
 import oyun.room.RoomSocket.{ Protocol => RP, _ }
@@ -41,6 +42,8 @@ final class MasaSocket(
   def tellMasa(masaId: Masa.Id, msg: Any): Unit = masas.tell(masaId.value, msg)
 
   private lazy val masaHandler: Handler = {
+    case Protocol.In.PlayerMove(fullId, uci) =>
+      tellMasa(fullId.masaId, HumanPlay(fullId.userId, uci))
     case Protocol.In.Sit(id, side) =>
       tellMasa(id.masaId, Buyin(id.userId, side))
     case Protocol.In.SitoutNext(masaId, side, value) =>
@@ -64,11 +67,19 @@ object MasaSocket {
 
     object In {
       case class PlayerDo(fullId: FullId, tpe: String) extends P.In
+      case class PlayerMove(fullId: FullId, uci: Uci) extends P.In
       case class Sit(fullId: FullId, side: Side) extends P.In
       case class SitoutNext(masaId: Masa.Id, side: Side, value: Boolean) extends P.In
 
       val reader: P.In.Reader = raw => {
         raw.path match {
+          case "m/move" =>
+            raw.get(2) {
+              case Array(fullId, uciS) =>
+                Uci.Move(uciS) map { uci =>
+                  PlayerMove(FullId(fullId), uci)
+                }
+            }
           case "m/sit" =>
             raw.get(2) {
               case Array(fullId, side) =>
@@ -89,6 +100,8 @@ object MasaSocket {
     }
 
     object Out {
+
+      def resyncPlayer(fullId: FullId) = s"m/resync/player $fullId"
 
       def masaPlayerStore(masaId: Masa.Id, value: String) =
         s"m/players $masaId $value"

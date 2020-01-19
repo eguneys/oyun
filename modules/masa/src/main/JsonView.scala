@@ -41,10 +41,8 @@ final class JsonView(
           ).add("me" -> (for {
             _ <- pov.side
             p <- pov.player
-          } yield Json.obj(
-            "status" -> p.status,
-            "side" -> p.side
-          )))
+          } yield oyun.game.Event.Me.json(masa, p)
+          ))
             .add("game" -> masa.game.map(gameJson))
       }
 
@@ -57,7 +55,6 @@ final class JsonView(
     "name" -> user.username,
     "img" -> user.avatar.link
   )
-
 }
 
 object JsonView {

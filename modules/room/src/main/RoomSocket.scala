@@ -14,6 +14,11 @@ object RoomSocket {
         case _ => P.In.baseReader(raw)
       }
     }
+
+    object Out {
+      def stop(roomId: RoomId) =
+        s"room/stop $roomId"
+    }
   }
 
 }

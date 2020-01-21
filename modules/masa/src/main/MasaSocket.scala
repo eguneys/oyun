@@ -44,6 +44,15 @@ final class MasaSocket(
   def tellMasa(masaId: Masa.Id, msg: Any): Unit = masas.tell(masaId.value, msg)
 
   private lazy val masaHandler: Handler = {
+    case Protocol.In.PlayerOnlines(onlines) =>
+      onlines foreach {
+        case (masaId, Some(on)) =>
+          tellMasa(masaId, on)
+          terminationDelay cancel masaId
+        case (masaId, None) =>
+          if (masas exists masaId.value)
+            terminationDelay schedule masaId
+      }
     case Protocol.In.PlayerMove(fullId, uci) =>
       tellMasa(fullId.masaId, HumanPlay(fullId.userId, uci))
     case Protocol.In.Sit(id, side) =>
@@ -78,6 +87,7 @@ object MasaSocket {
   object Protocol {
 
     object In {
+      case class PlayerOnlines(onlines: Iterable[(Masa.Id, Option[RoomCrowd])]) extends P.In
       case class PlayerDo(fullId: FullId, tpe: String) extends P.In
       case class PlayerMove(fullId: FullId, uci: Uci) extends P.In
       case class Sit(fullId: FullId, side: Side) extends P.In
@@ -85,6 +95,19 @@ object MasaSocket {
 
       val reader: P.In.Reader = raw => {
         raw.path match {
+          case "r/ons" =>
+            PlayerOnlines {
+              P.In.commas(raw.args) map {
+                _ splitAt Masa.masaIdSize match {
+                  case (masaId, cs) =>
+                    (Masa.Id(masaId),
+                      if (cs.isEmpty) None 
+                      else
+                        Some(RoomCrowd(cs.toInt))
+                    )
+                }
+              }
+            }.some
           case "m/move" =>
             raw.get(2) {
               case Array(fullId, uciS) =>
@@ -113,7 +136,7 @@ object MasaSocket {
 
     object Out {
 
-      def resyncPlayer(fullId: FullId) = s"m/resync/player $fullId"
+      def resyncPlayer(fullId: FullId) = s"m/resync/players $fullId"
 
       def masaPlayerStore(masaId: Masa.Id, value: String) =
         s"m/players $masaId $value"
@@ -151,6 +174,10 @@ object MasaSocket {
         }
       }
     )
+
+    def cancel(masaId: Masa.Id): Unit =
+      Option(terminations remove masaId.value).foreach(_.cancel)
+
   }
 
 }

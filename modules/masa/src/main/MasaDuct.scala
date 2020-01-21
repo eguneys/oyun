@@ -32,6 +32,9 @@ final private[masa] class MasaDuct(
         )
       }
 
+    case RoomCrowd(nbUsers) =>
+      funit
+
     // round
 
     case MaybeDeal => handle { masa =>
@@ -75,7 +78,11 @@ final private[masa] class MasaDuct(
         funit >>-
         publishMasaPlayerStore
       }
-    case Stop =>
+    case Stop => {
+      fuccess {
+        socketSend(RP.Out.stop(roomId))
+      }
+    }
   }
 
   private def publishMasaPlayerStore: Funit = proxy withMasa { m =>

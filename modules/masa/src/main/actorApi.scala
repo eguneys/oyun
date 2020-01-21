@@ -13,6 +13,8 @@ case class SocketStatus(
   version: SocketVersion
 )
 
+case class RoomCrowd(nbUsers: Int)
+
 package masa {
 
   case class HumanPlay(

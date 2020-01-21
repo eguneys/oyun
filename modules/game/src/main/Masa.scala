@@ -52,14 +52,31 @@ final case class Masa(
   def sitable(userId: User.ID, side: Side) = 
     valid(side) && empty(side) && !sitting(userId)
 
-  def noPlayers = players.length == 0
-  def atLeastTwo = players.length >= 2
+  def nbPlayers = players.length
+  def atLeastTwo = nbPlayers >= 2
+  def headsUp = nbPlayers == 2
+  def onePlayer = nbPlayers == 1
+  def noPlayers = nbPlayers == 0
 
-  def gameInProgress = game.isDefined
+  def isGame = game.isDefined
+  def noGame = !isGame
+  def playing = game.exists(_.playing)
+  def finished = game.exists(_.finished)
 
-  def noGameInProgress = !gameInProgress
+  def dealable = noGame && atLeastTwo
 
-  def dealable = noGameInProgress && atLeastTwo
+  def eject = {
+    Progress(
+      this,
+      copy(
+        game = game.map(_.copy(status = Status.Aborted)),
+        seats = seats.map {
+          case Some(p) => None
+          case _ => None
+        }
+      ))
+  }
+
 
   def finish(status: Status) = {
     Progress(
@@ -78,6 +95,19 @@ final case class Masa(
     val events = Event.Move(move, pokerGame.situation) :: 
       updated.players.map { Event.Me(updated, _) 
 }
+    Progress(this, updated, events)
+  }
+
+  def dealPre: Progress = {
+    val updated = copy(
+      seats = seats.map {
+        case Some(p) => p.dealPre
+        case _ => None
+      }
+    )
+
+    val events = Nil
+
     Progress(this, updated, events)
   }
 

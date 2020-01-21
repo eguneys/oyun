@@ -7,6 +7,11 @@ import oyun.user.User
 final private class Finisher(
 )(implicit ec: scala.concurrent.ExecutionContext) {
 
+  def eject(masa: Masa)(implicit proxy: MasaProxy): Fu[Events] = {
+    val prog = masa.eject
+    proxy.save(prog)
+    fuccess(prog.events)
+  }
 
   def other(masa: Masa, status: Status.type => Status)(implicit proxy: MasaProxy): Fu[Events] =
     apply(masa, status)

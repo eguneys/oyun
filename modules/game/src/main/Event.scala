@@ -4,7 +4,12 @@ import play.api.libs.json._
 
 import Player._
 
-import poker.{ PlayerAct,
+import poker.{ 
+  PlayerAct,
+  DealerAct,
+  MiddleCards,
+  Pot,
+  Card,
   Side,
   Situation,
   Move => PokerMove }
@@ -20,12 +25,14 @@ sealed trait Event {
 object Event {
 
   case class Move(
-    act: PlayerAct
+    act: PlayerAct,
+    dAct: DealerAct
   ) extends Event {
     def typ = "move"
 
     def data = Json.obj(
-    )
+      "uci" -> act.uci,
+    ) ++ Move.dAct(dAct)
     
 
 
@@ -33,10 +40,45 @@ object Event {
 
   object Move {
 
+    def dAct(act: DealerAct) = act match {
+      case poker.NextTurn(toAct, playerDiff) =>
+        Json.obj(
+          "newStack" -> playerDiff.newStack,
+          "newWager" -> playerDiff.newWager,
+          "newRole" -> playerDiff.newRole.forsyth.toString,
+          "nextTurn" -> Json.obj(
+            "toAct" -> toAct
+          )
+        )
+      case poker.NextRound(toAct, playerDiff, middle, runningPot, sidePots) =>
+          Json.obj(
+            "newStack" -> playerDiff.newStack,
+            "newWager" -> playerDiff.newWager,
+            "newRole" -> playerDiff.newRole.forsyth.toString,
+            "newRound" -> Json.obj(
+              "toAct" -> toAct,
+              "middle" -> middleJson(middle),
+              "pots" -> potsJson(runningPot :: sidePots)
+            )
+          )
+      case poker.OneWin(winners) => Json.obj()
+      case poker.Showdown(middle, hands, winners) => Json.obj()
+    }
+
+    def middleJson(middle: MiddleCards) = Json.obj(
+    ).add("flop" -> middle.flop.map(handsJson))
+      .add("turn" -> middle.turn.map(_.visual))
+      .add("river" -> middle.river.map(_.visual))
+
+    def potsJson(pots: List[Pot]) = pots map(_.visual) mkString ("~")
+
+    def handsJson(hands: List[Card]) = hands map(_.visual) mkString (" ")
+
     def apply(
       move: PokerMove,
       situation: Situation): Move = Move(
-      move.playerAct
+      move.playerAct,
+        move.dealerAct
     )
 
   }

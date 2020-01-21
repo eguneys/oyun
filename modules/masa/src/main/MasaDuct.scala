@@ -37,6 +37,12 @@ final private[masa] class MasaDuct(
 
     // round
 
+    case MaybeDealPre => handle { masa =>
+      dealer.dealPre(masa) >>- {
+        this ! MaybeDeal
+      }
+    }
+
     case MaybeDeal => handle { masa =>
       masa.dealable ?? dealer.deal(masa)
     }
@@ -56,7 +62,7 @@ final private[masa] class MasaDuct(
       handle { masa =>
         sitter.buyin(masa, userId, side) >>-
         publishMasaPlayerStore >>- {
-          this ! MaybeDeal
+          this ! MaybeDealPre
         }
       }.addEffects(
         err => {
@@ -69,7 +75,7 @@ final private[masa] class MasaDuct(
       handle { masa =>
         sitter.sitoutNext(masa, side, value) >>-
         publishMasaPlayerStore >>- {
-          this ! MaybeDeal
+          this ! MaybeDealPre
         }
       }
 
@@ -79,8 +85,10 @@ final private[masa] class MasaDuct(
         publishMasaPlayerStore
       }
     case Stop => {
-      fuccess {
-        socketSend(RP.Out.stop(roomId))
+      proxy.withMasa { m =>
+        finisher.eject(m) >>- {
+          socketSend(RP.Out.stop(roomId))
+        }
       }
     }
   }
@@ -136,7 +144,8 @@ object MasaDuct {
     val masaRepo: oyun.game.MasaRepo,
     val sitter: Sitter,
     val dealer: Dealer,
-    val player: Player
+    val player: Player,
+    val finisher: Finisher
   )
 
 }

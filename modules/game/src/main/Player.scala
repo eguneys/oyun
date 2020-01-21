@@ -28,10 +28,19 @@ case class Player(
       copy(status = Involved).some
   }
 
+  def dealPre: Option[Player] = status match {
+    case SitOutNextHand => None
+    case _ => copy(status = WaitNextHand).some
+  }
+
+  def sitoutNext: Boolean = is(SitOutNextHand)
+
   def involved: Player = copy(status = Involved)
 
   def buttonOn = copy(button = true)
   def buttonOff = copy(button = false)
+
+  def is(s: Status): Boolean = s == status
 
 }
 

@@ -25,6 +25,6 @@ package masa {
   case class SitoutNext(side: Side, value: Boolean)
 
   case object MaybeDeal
-
+  case object MaybeDealPre
   
 }

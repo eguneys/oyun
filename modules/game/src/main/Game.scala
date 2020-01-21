@@ -22,6 +22,8 @@ case class Game(poker: PokerGame,
 
   def started = status >= Status.Started
 
+  def playing = status < Status.OneWin
+
   def finished = status >= Status.OneWin
 
   def update(game: PokerGame) = copy(poker = game,
@@ -41,7 +43,10 @@ object Game {
   def makeGame(blinds: Float, players: List[Player]): Game = {
     val poker = PokerGame(
       blinds,
-      button = players.indexWhere(_.button) | 0,
+      button = players.indexWhere(_.button) match {
+        case -1 => 0
+        case n => (n + 1) % players.length
+      },
       iStacks = players.map(_.stack)
     )
 

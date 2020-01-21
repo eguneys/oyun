@@ -33,8 +33,10 @@ final private class Player(
           }
         case Pov(masa, Some(side)) if !masa.turnOf(side) => 
           fufail(ClientError(s"$pov not your turn"))
-        case Pov(masa, _) if masa.noGameInProgress =>
-          fufail(ClientError(s"$pov no game in progress"))
+        case Pov(masa, _) if masa.noGame =>
+          fufail(ClientError(s"$pov no game playing"))
+        case Pov(masa, _) if masa.finished =>
+          fufail(ClientError(s"$pov game is finished"))
         case Pov(masa, None) => fufail(ClientError(s"$pov non player"))
         case _ => fufail(ClientError(s"$pov move refused for some reason"))
       }

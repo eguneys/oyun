@@ -49,13 +49,10 @@ case class Game(poker: PokerGame,
 object Game {
 
 
-  def makeGame(blinds: Chips, players: List[Player]): Game = {
+  def makeGame(blinds: Chips, button: StackIndex, players: List[Player]): Game = {
     val poker = PokerGame(
       blinds,
-      button = players.indexWhere(_.button) match {
-        case -1 => 0
-        case n => (n + 1) % players.length
-      },
+      button,
       iStacks = players.map(_.stack)
     )
 

@@ -32,6 +32,8 @@ case class Player(
 
   def involved: Player = copy(status = Involved)
 
+  def nextButton: Player = copy(button = !button)
+
   def buttonOn = copy(button = true)
   def buttonOff = copy(button = false)
 

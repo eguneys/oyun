@@ -118,11 +118,17 @@ final case class Masa(
 
   def deal: Progress = {
 
-    val game = Game.makeGame(stakes.blinds, players)
+    val oldButton = players.indexWhere(_.button)
+    val newButton = (oldButton + 1) % players.length
+
+
+    val game = Game.makeGame(stakes.blinds, newButton, players)
 
     val updated = copy(
-      seats = seats.map {
-        case Some(p) => Some(p.involved)
+      seats = seats.zipWithIndex.map {
+        case Some(p) ~ i if i == oldButton => Some(p.involved.nextButton)
+        case Some(p) ~ i if i == newButton => Some(p.involved.nextButton)
+        case Some(p) ~ _ => Some(p.involved)
         case _ => None
       },
       game = Some(game)

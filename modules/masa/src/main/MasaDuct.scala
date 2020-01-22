@@ -37,12 +37,6 @@ final private[masa] class MasaDuct(
 
     // round
 
-    case MaybeDealPre => handle { masa =>
-      dealer.dealPre(masa) >>- {
-        this ! MaybeDeal
-      }
-    }
-
     case MaybeDeal => handle { masa =>
       masa.dealable ?? dealer.deal(masa)
     }
@@ -55,6 +49,7 @@ final private[masa] class MasaDuct(
           socketSend(Protocol.Out.resyncPlayer(Masa.Id(masaId) full p.userId))
         },
         lap => {
+          this ! MaybeDeal
         }
       )
 
@@ -62,7 +57,7 @@ final private[masa] class MasaDuct(
       handle { masa =>
         sitter.buyin(masa, userId, side) >>-
         publishMasaPlayerStore >>- {
-          this ! MaybeDealPre
+          this ! MaybeDeal
         }
       }.addEffects(
         err => {
@@ -75,7 +70,7 @@ final private[masa] class MasaDuct(
       handle { masa =>
         sitter.sitoutNext(masa, side, value) >>-
         publishMasaPlayerStore >>- {
-          this ! MaybeDealPre
+          this ! MaybeDeal
         }
       }
 

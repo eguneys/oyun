@@ -6,7 +6,7 @@ import ornicar.scalalib.Random
 
 import oyun.user.{ User, Avatar }
 
-import poker.{ Side }
+import poker.{ Chips, Side }
 
 case class Player(
   id: Player.ID, // random
@@ -15,7 +15,7 @@ case class Player(
   avatar: Avatar,
   status: Player.Status,
   button: Boolean,
-  stack: Float
+  stack: Chips
 ) {
 
   import Player._
@@ -26,11 +26,6 @@ case class Player(
       copy(status = SitOutNextHand).some
     else
       copy(status = Involved).some
-  }
-
-  def dealPre: Option[Player] = status match {
-    case SitOutNextHand => None
-    case _ => copy(status = WaitNextHand).some
   }
 
   def sitoutNext: Boolean = is(SitOutNextHand)
@@ -65,12 +60,21 @@ object Player {
 
   type ID = String
 
+  def make(
+    noPlayers: Boolean,
+    side: Side,
+    user: User,
+    chips: Chips) = if (noPlayers)
+    Player(side, user, chips, Player.WaitOthers, true)
+  else
+    Player(side, user, chips, Player.WaitNextHand, false)
+
   def apply(
     side: Side,
     user: User,
+    stack: Chips,
     status: Status,
-    button: Boolean,
-    stack: Float) =
+    button: Boolean) =
     new Player(id = makePlayerId,
       side = side,
       userId = user.id,

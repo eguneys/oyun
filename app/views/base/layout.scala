@@ -23,6 +23,14 @@ object layout {
       """<meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">"""
     )
 
+    def cardSprite(implicit ctx: Context): Frag =
+      link(
+        id := "card-sprite",
+        href := assetUrl(s"card-css/zynga.css"),
+        tpe := "text/css",
+        rel := "stylesheet"
+      )
+
   }
 
   import bits._
@@ -79,6 +87,7 @@ object layout {
         },
         cssTag("site"),
         moreCss,
+        cardSprite,
         favicons,
         fontPreload
       ),

@@ -55,7 +55,7 @@ object Event {
             "newStack" -> playerDiff.newStack,
             "newWager" -> playerDiff.newWager,
             "newRole" -> playerDiff.newRole.forsyth.toString,
-            "newRound" -> Json.obj(
+            "nextRound" -> Json.obj(
               "toAct" -> toAct,
               "middle" -> middleJson(middle),
               "pots" -> potsJson(runningPot :: sidePots)
@@ -66,13 +66,11 @@ object Event {
     }
 
     def middleJson(middle: MiddleCards) = Json.obj(
-    ).add("flop" -> middle.flop.map(handsJson))
-      .add("turn" -> middle.turn.map(_.visual))
-      .add("river" -> middle.river.map(_.visual))
+    ).add("flop" -> middle.flop.map(HandDealer.handsJson))
+      .add("turn" -> middle.turn.map(HandDealer.handJson))
+      .add("river" -> middle.river.map(HandDealer.handJson))
 
     def potsJson(pots: List[Pot]) = pots map(_.visual) mkString ("~")
-
-    def handsJson(hands: List[Card]) = hands map(_.visual) mkString (" ")
 
     def apply(
       move: PokerMove,
@@ -80,6 +78,14 @@ object Event {
       move.playerAct,
         move.dealerAct
     )
+
+  }
+
+  object HandDealer {
+
+    def handsJson(hands: List[Card]) = hands map(handJson) mkString (" ")
+
+    def handJson(hand: Card) = hand.visual
 
   }
 
@@ -109,7 +115,7 @@ object Event {
       "side" -> side,
       "player" -> (oPlayer.fold[JsValue](JsNull){ player => Json.obj(
         "status" -> player.status
-      ) })
+      )})
     )
 
   }
@@ -130,10 +136,10 @@ object Event {
 
   }
 
-  case class Me(possibleMoves: Option[List[PlayerAct]], player: Player) extends Event {
+  case class Me(possibleMoves: Option[List[PlayerAct]], hand: Option[List[Card]], player: Player) extends Event {
     def typ = "me"
 
-    def data = Me.json(possibleMoves, player)
+    def data = Me.json(possibleMoves, hand, player)
 
     private def side = player.side
 
@@ -142,17 +148,19 @@ object Event {
 
   object Me {
 
-    def json(possibleMoves: Option[List[PlayerAct]], player: Player) = 
+    def json(possibleMoves: Option[List[PlayerAct]], hand: Option[List[Card]], player: Player) = 
       Json.obj(
         "status" -> player.status,
         "side" -> player.side
       ).add("possibleMoves" -> possibleMoves.map(PossibleMoves.json))
+        .add("hand" -> hand.map(HandDealer.handsJson))
 
     def json(masa: Masa, player: Player): JsObject = 
-      json(masa.possibleMoves(player), player)
+      json(masa.possibleMoves(player), masa.handOf(player), player)
 
     def apply(masa: Masa, player: Player): Me = Me(
       possibleMoves = masa.possibleMoves(player),
+      hand = masa.handOf(player),
       player = player)
 
   }

@@ -1,6 +1,6 @@
 package oyun.game
 
-import poker.{ Status, Side, Game => PokerGame }
+import poker.{ StackIndex, Status, Chips, Side, Game => PokerGame }
 
 case class Game(poker: PokerGame, 
   status: Status,
@@ -17,6 +17,15 @@ case class Game(poker: PokerGame,
   def turnToAct = poker.player
 
   def turnOf(s: Side) = s == sideToAct
+
+  def pokerGameStackIndex(s: Side): Option[StackIndex] = seatIndexes.indexOf(s) match {
+    case -1 => None
+    case i => Some(i)
+  }
+
+  def handOf(s: Side) = pokerGameStackIndex(s) map { i =>
+    poker.handDealer.holes(i)
+  }
 
   def playable = status < Status.OneWin
 
@@ -40,7 +49,7 @@ case class Game(poker: PokerGame,
 object Game {
 
 
-  def makeGame(blinds: Float, players: List[Player]): Game = {
+  def makeGame(blinds: Chips, players: List[Player]): Game = {
     val poker = PokerGame(
       blinds,
       button = players.indexWhere(_.button) match {

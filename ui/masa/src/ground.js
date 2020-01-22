@@ -15,7 +15,7 @@ export function makeConfig(ctrl) {
   if (game) {
     gameClock = game.clock;
     gameFen = game.fen;
-    gameSeatIndexes = game.seatIndexes;
+    gameSeatIndexes = game.seatIndexes.map(_ => parseInt(_));
   }
 
   return {

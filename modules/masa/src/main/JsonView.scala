@@ -24,7 +24,7 @@ final class JsonView(
           import pov._
           Json.obj(
             "nbSeats" -> masa.nbSeats.nb,
-            "stakes" -> masa.stakes.stakesString,
+            "stakes" -> masa.stakes.blinds.toString,
             "seats" -> (masa.seats zip playerUsers).map{
               case Some(p) ~ Some(u) => playerView(p, u)
               case _ => JsNull
@@ -70,7 +70,7 @@ object JsonView {
 
   implicit val stakesWrites: OWrites[Masa.Stakes] = OWrites { stakes =>
     Json.obj(
-      "stakes" -> stakes.stakesString,
+      "stakes" -> stakes.blinds.toString,
       "buyIn" -> stakes.buyIn
     )
   }

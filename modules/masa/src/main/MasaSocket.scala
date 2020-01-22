@@ -136,7 +136,7 @@ object MasaSocket {
 
     object Out {
 
-      def resyncPlayer(fullId: FullId) = s"m/resync/players $fullId"
+      def resyncPlayer(fullId: FullId) = s"m/resync/player $fullId"
 
       def masaPlayerStore(masaId: Masa.Id, value: String) =
         s"m/players $masaId $value"

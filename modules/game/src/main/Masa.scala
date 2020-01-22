@@ -2,7 +2,7 @@ package oyun.game
 
 import ornicar.scalalib.Random
 
-import poker.{ NbSeats, Status, Side, Move, Game => PokerGame }
+import poker.{ NbSeats, Status, Chips, Side, Move, Game => PokerGame }
 
 import oyun.user.User
 
@@ -42,6 +42,8 @@ final case class Masa(
     turnOf(player) option game.situation.possibleActs
   }
 
+  def handOf(player: Player) = game.flatMap(_.handOf(player.side))
+
 
   def valid(s: Side) = nbSeats.valid(s)
 
@@ -69,7 +71,7 @@ final case class Masa(
     Progress(
       this,
       copy(
-        game = game.map(_.copy(status = Status.Aborted)),
+        game = None,
         seats = seats.map {
           case Some(p) => None
           case _ => None
@@ -79,12 +81,28 @@ final case class Masa(
 
 
   def finish(status: Status) = {
+    val newSeats = seats.map {
+      case Some(p) if p.sitoutNext => None
+      case Some(p) => Some(p)
+      case _ => None
+    }
+
+    val updated = copy(
+      game = None,
+      seats = newSeats
+    )
+
+
+    val events = (seats zip newSeats).foldLeft[List[Event]](Nil) {
+      case (events, Some(p) ~ None) => Event.SitoutNext(p.side, None) :: events
+      case (events, _) => events
+    }
+
+
     Progress(
       this,
-      copy(
-        game = game.map(_.copy(status = status))
-      ),
-      Nil)
+      updated,
+      events)
   }
 
   def update(pokerGame: PokerGame, move: Move): Progress = {
@@ -95,19 +113,6 @@ final case class Masa(
     val events = Event.Move(move, pokerGame.situation) :: 
       updated.players.map { Event.Me(updated, _) 
 }
-    Progress(this, updated, events)
-  }
-
-  def dealPre: Progress = {
-    val updated = copy(
-      seats = seats.map {
-        case Some(p) => p.dealPre
-        case _ => None
-      }
-    )
-
-    val events = Nil
-
     Progress(this, updated, events)
   }
 
@@ -133,10 +138,7 @@ final case class Masa(
 
   def buyin(user: User, side: Side): Progress = {
 
-    val p = if (noPlayers)
-      Player(side, user, Player.WaitOthers, true, 10f)
-    else
-      Player(side, user, Player.WaitNextHand, false, 10f)
+    val p = Player.make(noPlayers, side, user, Chips(10f))
 
     val updated = updatePlayer(side, Some(p))
     Progress(this, updated) ++ List(
@@ -184,35 +186,34 @@ object Masa {
   )
 
   sealed trait Stakes {
-    val blinds: Float
+    val blinds: Chips
 
-    def stakesString = f"$blinds%1.2f"
     def buyIn = blinds * 20
   }
 
   case object Micro1 extends Stakes {
-    val blinds = 0.05f
+    val blinds = Chips(0.05f)
   }
   case object Micro2 extends Stakes {
-    val blinds = 0.1f
+    val blinds = Chips(0.1f)
   }
   case object Micro3 extends Stakes {
-    val blinds = 0.25f
+    val blinds = Chips(0.25f)
   }
   case object Micro4 extends Stakes {
-    val blinds = 0.5f
+    val blinds = Chips(0.5f)
   }
   case object Mini1 extends Stakes {
-    val blinds = 1.0f
+    val blinds = Chips(1.0f)
   }
   case object Mini2 extends Stakes {
-    val blinds = 2.0f
+    val blinds = Chips(2.0f)
   }
   case object Mini5 extends Stakes {
-    val blinds = 5.0f
+    val blinds = Chips(5.0f)
   }
   case object Mini10 extends Stakes {
-    val blinds = 10.0f
+    val blinds = Chips(10.0f)
   }
 
   def makeId = Random nextString 8

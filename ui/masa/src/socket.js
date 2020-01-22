@@ -12,7 +12,8 @@ export function make(send, ctrl) {
     buyin: ctrl.buyIn,
     sitoutnext: ctrl.sitoutNext,
     deal: ctrl.deal,
-    me: ctrl.meSet
+    me: ctrl.meSet,
+    move: ctrl.apiMove
   };
 
   return {

@@ -94,7 +94,23 @@ export default function MasaController(opts, redraw) {
   };
 
   this.deal = (o) => {
+    o.seatIndexes = o.seatIndexes.map(_ => parseInt(_));
     this.pokerground.deal(o);
+  };
+
+  this.apiMove = (o) => {
+    let lp = this.pokerground.move(o);
+    console.log(o);
+    if (o.nextTurn) {
+      lp = lp.then(() => this.pokerground.nextTurn(o.nextTurn));
+    } else if (o.nextRound) {
+      lp = lp.then(() => this.pokerground.nextRound(o.nextRound));
+    } else if (o.oneWin) {
+      lp = lp.then(() => this.pokerground.oneWin(o.oneWin));
+    } else if (o.showdown) {
+      lp = lp.then(() => this.pokerground.showdown(o.showdown));
+    }
+    return lp;
   };
 
   this.socket = makeSocket(opts.socketSend, this);

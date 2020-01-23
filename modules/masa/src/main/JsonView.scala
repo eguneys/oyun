@@ -23,6 +23,7 @@ final class JsonView(
         case socket ~ playerUsers =>
           import pov._
           Json.obj(
+            "id" -> masa.id,
             "nbSeats" -> masa.nbSeats.nb,
             "stakes" -> masa.stakes.blinds.toString,
             "seats" -> (masa.seats zip playerUsers).map{

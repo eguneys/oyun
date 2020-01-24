@@ -2,13 +2,13 @@ package oyun.masa
 
 import akka.actor._
 import com.softwaremill.macwire._
-import io.methvin.play.autoconfig._
-import play.api.Configuration
+// import io.methvin.play.autoconfig._
+// import play.api.Configuration
 
 import actorApi. { GetSocketStatus, SocketStatus }
-import oyun.common.config._
+// import oyun.common.config._
 import oyun.game.{ Masa }
-import oyun.user.User
+// import oyun.user.User
 
 private class MasaConfig(
 )
@@ -16,8 +16,8 @@ private class MasaConfig(
 
 @Module
 final class Env(
-  appConfig: Configuration,
-  db: oyun.db.Db,
+  // appConfig: Configuration,
+  // db: oyun.db.Db,
   remoteSocketApi: oyun.socket.RemoteSocket,
   lightUserApi: oyun.user.LightUserApi,
   userRepo: oyun.user.UserRepo,
@@ -27,7 +27,7 @@ final class Env(
   system: ActorSystem) {
 
 
-  private val config = appConfig.get[MasaConfig]("masa")(AutoConfig.loader)
+  // private val config = appConfig.get[MasaConfig]("masa")(AutoConfig.loader)
 
   private lazy val masaScheduler = wire[MasaScheduler]
   masaScheduler.scheduleNow()

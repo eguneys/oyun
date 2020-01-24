@@ -1,8 +1,7 @@
 package oyun.masa
 
-import poker.{ Side }
 import oyun.game.{ Masa }
-import oyun.user.User
+// import oyun.user.User
 
 final private class Dealer(
 )(implicit ec: scala.concurrent.ExecutionContext) {

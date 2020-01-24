@@ -59,7 +59,10 @@ final private class Player(
     (uci match {
       case Uci.Move(act) =>
         game.poker(act) map {
-          case (npg, move) => npg -> move
+          case (npg, move) => {
+            println(npg, move)
+            npg -> move
+          }
         }
     }).map {
       case (newPokerGame, move) =>

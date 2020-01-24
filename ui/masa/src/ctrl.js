@@ -73,7 +73,7 @@ export default function MasaController(opts, redraw) {
   };
 
   this.buyIn = (o) => {
-    this.pokerground.join({
+    return this.pokerground.join({
       seatIndex: o.side,
       seat: {
         name: o.player.user,
@@ -85,8 +85,9 @@ export default function MasaController(opts, redraw) {
 
   this.sitoutNext = (o) => {
     if (!o.player) {
-      this.pokerground.leave({ seatIndex: o.side });
+      return this.pokerground.leave({ seatIndex: o.side });
     }
+    return Promise.resolve();
   };
 
   this.meSet = (o) => {
@@ -95,7 +96,7 @@ export default function MasaController(opts, redraw) {
 
   this.deal = (o) => {
     o.seatIndexes = o.seatIndexes.map(_ => parseInt(_));
-    this.pokerground.deal(o);
+    return this.pokerground.deal(o);
   };
 
   this.apiMove = (o) => {

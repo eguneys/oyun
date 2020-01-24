@@ -8,7 +8,10 @@ import poker.{
   PlayerAct,
   DealerAct,
   MiddleCards,
-  Chips,
+  Winners,
+  PlayerDiff,
+  PotDistribution,
+  Hand,
   Pot,
   Card,
   Side,
@@ -27,12 +30,16 @@ object Event {
 
   case class Move(
     act: PlayerAct,
-    dAct: DealerAct
+    dAct: DealerAct,
+    pDiff: PlayerDiff,
   ) extends Event {
     def typ = "move"
 
     def data = Json.obj(
       "uci" -> act.uci,
+      "newStack" -> pDiff.newStack,
+      "newWager" -> pDiff.newWager,
+      "newRole" -> pDiff.newRole.forsyth.toString
     ) ++ Move.dAct(dAct)
     
 
@@ -42,51 +49,70 @@ object Event {
   object Move {
 
     def dAct(act: DealerAct) = act match {
-      case poker.NextTurn(toAct, playerDiff) =>
+      case poker.NextTurn(toAct) =>
         Json.obj(
-          "newStack" -> playerDiff.newStack,
-          "newWager" -> playerDiff.newWager,
-          "newRole" -> playerDiff.newRole.forsyth.toString,
           "nextTurn" -> Json.obj(
             "toAct" -> toAct
           )
         )
-      case poker.NextRound(toAct, playerDiff, middle, runningPot, sidePots) =>
+      case poker.NextRound(toAct, middle, runningPot, sidePots) =>
           Json.obj(
-            "newStack" -> playerDiff.newStack,
-            "newWager" -> playerDiff.newWager,
-            "newRole" -> playerDiff.newRole.forsyth.toString,
             "nextRound" -> Json.obj(
               "toAct" -> toAct,
               "middle" -> middleJson(middle),
               "pots" -> potsJson(runningPot :: sidePots)
             )
           )
-      case poker.OneWin(winners) => Json.obj()
-      case poker.Showdown(middle, hands, winners) => Json.obj()
+      case poker.OneWin(winners) => Json.obj(
+        "oneWin" -> Json.obj(
+          "winners" -> winnersJson(winners)
+        )
+      )
+      case poker.Showdown(middle, hands, winners) => Json.obj(
+        "showdown" -> Json.obj(
+          "winners" -> winnersJson(winners),
+          "middle" -> middleJson(middle),
+          "hands" -> HandDealer.handsJson(hands)
+        )
+      )
     }
 
+
+    def winnersJson(winners: Winners) = Json.obj(
+      "pots" -> potDistJson(winners.pots),
+      "stacks" -> winners.stacks
+    )
+
     def middleJson(middle: MiddleCards) = Json.obj(
-    ).add("flop" -> middle.flop.map(HandDealer.handsJson))
-      .add("turn" -> middle.turn.map(HandDealer.handJson))
-      .add("river" -> middle.river.map(HandDealer.handJson))
+    ).add("flop" -> middle.flop.map(HandDealer.cardsJson))
+      .add("turn" -> middle.turn.map(HandDealer.cardJson))
+      .add("river" -> middle.river.map(HandDealer.cardJson))
+
+    def potDistJson(pots: List[PotDistribution]) = pots map(_.visual) mkString ("~")
 
     def potsJson(pots: List[Pot]) = pots map(_.visual) mkString ("~")
 
     def apply(
-      move: PokerMove,
-      situation: Situation): Move = 
+      move: PokerMove): Move = 
       Move(move.playerAct,
-        move.dealerAct
-      )
+        move.dealerAct,
+        move.playerDiff)
 
   }
 
   object HandDealer {
 
-    def handsJson(hands: List[Card]) = hands map(handJson) mkString (" ")
+    def handsJson(hands: List[Option[Hand]]) = hands map {
+      _.fold[JsValue](JsNull) { hand => Json.obj(
+        "hole" -> hand.holeString,
+        "rank" -> hand.value.key,
+        "hand" -> hand.toString
+      )}
+    }
 
-    def handJson(hand: Card) = hand.visual
+    def cardsJson(cards: List[Card]) = cards map(cardJson) mkString (" ")
+
+    def cardJson(card: Card) = card.visual
 
   }
 
@@ -154,7 +180,7 @@ object Event {
         "status" -> player.status,
         "side" -> player.side
       ).add("possibleMoves" -> possibleMoves.map(PossibleMoves.json))
-        .add("hand" -> hand.map(HandDealer.handsJson))
+        .add("hand" -> hand.map(HandDealer.cardsJson))
 
     def json(masa: Masa, player: Player): JsObject = 
       json(masa.possibleMoves(player), masa.handOf(player), player)

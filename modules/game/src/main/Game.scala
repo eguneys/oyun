@@ -1,6 +1,6 @@
 package oyun.game
 
-import poker.{ StackIndex, Status, Chips, Side, Game => PokerGame }
+import poker.{ StackIndex, Status, Side, Game => PokerGame }
 
 case class Game(poker: PokerGame, 
   status: Status,

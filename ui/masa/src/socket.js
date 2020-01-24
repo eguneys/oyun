@@ -1,19 +1,28 @@
 import throttle from 'common/throttle';
 
+function makeSerial() {
+  let lp = Promise.resolve();
+  return f => (...args) => {
+    lp = lp.then(() => f(...args));
+  };
+}
+
 export function make(send, ctrl) {
 
   function reload(o, isRetry) {
     
   }
 
+  const handleS = makeSerial();
+
   const d = ctrl.data;
 
   const handlers = {
-    buyin: ctrl.buyIn,
-    sitoutnext: ctrl.sitoutNext,
-    deal: ctrl.deal,
-    me: ctrl.meSet,
-    move: ctrl.apiMove
+    buyin: handleS(ctrl.buyIn),
+    sitoutnext: handleS(ctrl.sitoutNext),
+    deal: handleS(ctrl.deal),
+    me: handleS(ctrl.meSet),
+    move: handleS(ctrl.apiMove)
   };
 
   return {

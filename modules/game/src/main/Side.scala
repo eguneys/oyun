@@ -10,8 +10,8 @@ object SideJson {
     def writes(side: Side) = JsNumber(side.index)
   }
 
-  implicit val chipWrites = new Writes[Chips] {
-    def writes(chips: Chips) = JsString(chips.toString)
+  implicit val chipsWrites = new Writes[Chips] {
+    def writes(c: Chips) = JsNumber(c.value)
   }
-
 }
+

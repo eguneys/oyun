@@ -8,6 +8,7 @@ import poker.{
   PlayerAct,
   DealerAct,
   MiddleCards,
+  Chips,
   Pot,
   Card,
   Side,
@@ -74,10 +75,10 @@ object Event {
 
     def apply(
       move: PokerMove,
-      situation: Situation): Move = Move(
-      move.playerAct,
+      situation: Situation): Move = 
+      Move(move.playerAct,
         move.dealerAct
-    )
+      )
 
   }
 

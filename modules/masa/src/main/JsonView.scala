@@ -3,7 +3,7 @@ package oyun.masa
 import play.api.libs.json._
 import scala.concurrent.ExecutionContext
 
-import oyun.game.{ Game, Masa, Pov, Player => GamePlayer }
+import oyun.game.{ Stakes, Game, Masa, Pov, Player => GamePlayer }
 import oyun.game.SideJson._
 import oyun.user.{ User, UserRepo }
 import actorApi.SocketStatus
@@ -25,7 +25,7 @@ final class JsonView(
           Json.obj(
             "id" -> masa.id,
             "nbSeats" -> masa.nbSeats.nb,
-            "stakes" -> masa.stakes.blinds.toString,
+            "stakes" -> masa.stakes,
             "seats" -> (masa.seats zip playerUsers).map{
               case Some(p) ~ Some(u) => playerView(p, u)
               case _ => JsNull
@@ -53,6 +53,7 @@ final class JsonView(
   )
 
   def playerView(player: GamePlayer, user: User): JsObject = Json.obj(
+    "side" -> player.side,
     "name" -> user.username,
     "img" -> user.avatar.link
   )
@@ -69,9 +70,10 @@ object JsonView {
       .obj("id" -> player.id)
       .add("light" -> light)
 
-  implicit val stakesWrites: OWrites[Masa.Stakes] = OWrites { stakes =>
+  implicit val stakesWrites: OWrites[Stakes] = OWrites { stakes =>
     Json.obj(
-      "stakes" -> stakes.blinds.toString,
+      "unit" -> stakes.blinds.toString,
+      "currency" -> "$",
       "buyIn" -> stakes.buyIn
     )
   }

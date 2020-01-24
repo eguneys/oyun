@@ -9,14 +9,23 @@ export function tds(bits) {
   });
 }
 
-function currency(amount) {
-  return '$' + amount;
+function currencyFormat(value, currency) {
+  return `${currency}${value}`;
 }
 
 function stakes(stakes) {
-  const bb = parseFloat(stakes),
+  const { unit, currency } = stakes;
+
+  const bb = parseFloat(unit),
         sb = bb / 2;
-  return `${currency(sb)} / ${currency(bb)} `;
+  
+  return `${currencyFormat(sb, currency)} / ${currencyFormat(bb, currency)} `;
+}
+
+function buyIn(stakes) {
+  const { buyIn, currency } = stakes;
+
+  return `${currencyFormat(buyIn, currency)}`;
 }
 
 function nbSeats(masa) {
@@ -35,8 +44,8 @@ function renderMasa(ctrl, masa) {
     'data-id': masa.id
   }, tds([
     h('span', ' '),
-    h('span', stakes(masa.stakes.stakes)),
-    currency(masa.stakes.buyIn),
+    h('span', stakes(masa.stakes)),
+    buyIn(masa.stakes),
     nbSeats(masa)
   ]));
 }

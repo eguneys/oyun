@@ -1,15 +1,15 @@
 package oyun.lobby
 
 import com.softwaremill.macwire._
-import play.api.Configuration
+// import play.api.Configuration
 import scala.concurrent.duration._
 
-import oyun.common.config._
+// import oyun.common.config._
 
 @Module
 final class Env(
-  appConfig: Configuration,
-  db: oyun.db.Db,
+  //  appConfig: Configuration,
+  // db: oyun.db.Db,
   userRepo: oyun.user.UserRepo,
   masaRepo: oyun.game.MasaRepo,
   remoteSocketApi: oyun.socket.RemoteSocket

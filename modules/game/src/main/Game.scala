@@ -49,9 +49,8 @@ case class Game(poker: PokerGame,
 object Game {
 
 
-  def makeGame(blinds: Chips, button: StackIndex, players: List[Player]): Game = {
+  def makeGame(button: StackIndex, players: List[Player]): Game = {
     val poker = PokerGame(
-      blinds,
       button,
       iStacks = players.map(_.stack)
     )

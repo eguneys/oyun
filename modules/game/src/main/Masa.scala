@@ -9,12 +9,10 @@ import oyun.user.User
 final case class Masa(
   id: Masa.ID,
   nbSeats: NbSeats,
-  stakes: Masa.Stakes,
+  stakes: Stakes,
   seats: Vector[Option[Player]],
   game: Option[Game] = None
 ) {
-
-  import Masa._
 
   val players = seats.flatten.toList
 
@@ -73,7 +71,6 @@ final case class Masa(
       copy(
         game = None,
         seats = seats.map {
-          case Some(p) => None
           case _ => None
         }
       ))
@@ -111,8 +108,7 @@ final case class Masa(
     )
 
     val events = Event.Move(move, pokerGame.situation) :: 
-      updated.players.map { Event.Me(updated, _) 
-}
+      updated.players.map { Event.Me(updated, _) }
     Progress(this, updated, events)
   }
 
@@ -121,8 +117,7 @@ final case class Masa(
     val oldButton = players.indexWhere(_.button)
     val newButton = (oldButton + 1) % players.length
 
-
-    val game = Game.makeGame(stakes.blinds, newButton, players)
+    val game = Game.makeGame(newButton, players)
 
     val updated = copy(
       seats = seats.zipWithIndex.map {
@@ -144,7 +139,7 @@ final case class Masa(
 
   def buyin(user: User, side: Side): Progress = {
 
-    val p = Player.make(noPlayers, side, user, Chips(10f))
+    val p = Player.make(noPlayers, side, user, Chips(10))
 
     val updated = updatePlayer(side, Some(p))
     Progress(this, updated) ++ List(
@@ -190,37 +185,6 @@ object Masa {
     stakes = sched.stakes,
     seats = Vector.fill(sched.nbSeats.nb)(None)
   )
-
-  sealed trait Stakes {
-    val blinds: Chips
-
-    def buyIn = blinds * 20
-  }
-
-  case object Micro1 extends Stakes {
-    val blinds = Chips(0.05f)
-  }
-  case object Micro2 extends Stakes {
-    val blinds = Chips(0.1f)
-  }
-  case object Micro3 extends Stakes {
-    val blinds = Chips(0.25f)
-  }
-  case object Micro4 extends Stakes {
-    val blinds = Chips(0.5f)
-  }
-  case object Mini1 extends Stakes {
-    val blinds = Chips(1.0f)
-  }
-  case object Mini2 extends Stakes {
-    val blinds = Chips(2.0f)
-  }
-  case object Mini5 extends Stakes {
-    val blinds = Chips(5.0f)
-  }
-  case object Mini10 extends Stakes {
-    val blinds = Chips(10.0f)
-  }
 
   def makeId = Random nextString 8
 

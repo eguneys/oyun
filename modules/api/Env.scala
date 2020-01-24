@@ -1,17 +1,17 @@
 package oyun.api
 
-import akka.actor._
+// import akka.actor._
 import com.softwaremill.macwire._
-import play.api.{ Configuration, Mode }
+// import play.api.{ Configuration }
 
-import oyun.common.config._
+// import oyun.common.config._
 
 final class Env(
-  appConfig: Configuration,
-  net: NetConfig,
+  // appConfig: Configuration,
+  //net: NetConfig,
   masaEnv: oyun.masa.Env,
-  gameEnv: oyun.game.Env
-)(implicit ec: scala.concurrent.ExecutionContext, system: ActorSystem) {
+  // gameEnv: oyun.game.Env
+)(implicit ec: scala.concurrent.ExecutionContext) {
 
   lazy val lobbyApi = wire[LobbyApi]
 

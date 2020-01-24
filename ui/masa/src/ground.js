@@ -22,6 +22,7 @@ export function makeConfig(ctrl) {
     clock: gameClock,
     fen: gameFen,
     seatIndexes: gameSeatIndexes,
+    stakes: data.stakes,
     me: data.me,
     seats: data.seats,
     status: data.status,

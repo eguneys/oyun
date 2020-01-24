@@ -8,8 +8,8 @@ import play.api.{ Configuration, Environment, Mode }
 
 import scala.concurrent.{ ExecutionContext }
 
-import oyun.common.config._
-import oyun.user.User
+// import oyun.common.config._
+// import oyun.user.User
 
 final class Env(
   val config: Configuration,

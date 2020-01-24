@@ -4,7 +4,7 @@ import poker. { NbSeats }
 
 case class Schedule(
   nbSeats: NbSeats,
-  stakes: Masa.Stakes
+  stakes: Stakes
 ) {
 
   def plan = Schedule.Plan(this)

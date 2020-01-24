@@ -1,11 +1,10 @@
 package oyun.masa
 
-import poker.{ Side, Status }
-import oyun.game.{ Masa, Game }
-import oyun.user.User
+import poker.{ Status }
+import oyun.game.{ Masa }
 
 final private class Finisher(
-)(implicit ec: scala.concurrent.ExecutionContext) {
+) {
 
   def eject(masa: Masa)(implicit proxy: MasaProxy): Fu[Events] = {
     val prog = masa.eject

@@ -60,7 +60,6 @@ final private class Player(
       case Uci.Move(act) =>
         game.poker(act) map {
           case (npg, move) => {
-            println(npg, move)
             npg -> move
           }
         }
